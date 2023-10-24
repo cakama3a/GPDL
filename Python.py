@@ -25,7 +25,8 @@ print(f"  ██║  ███╗███████║██╔████�
 print(f"  ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ██╔═══╝ ██╔══██║██║  ██║██║     ██╔══██║")
 print(f"  ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗██║     ██║  ██║██████╔╝███████╗██║  ██║")
 print(f"   ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝")
-print("                                         by John Punch: https://t.me/ivanpunch")
+print(f"  Latency tester v{ver} by John Punch: https://www.reddit.com/user/JohnnyPunch")
+print(f" ")
 
 joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
 
@@ -62,6 +63,7 @@ for i, port in enumerate(available_ports):
     port_name = list_ports.comports()[i].description
     print(f"{i + 1} - {port_name}")
 
+print("* Notice: You must have a GPDL device to test!")
 port_num = int(input("Enter the COM port number for GPDL: ")) - 1
 try:
     port = available_ports[port_num] 
