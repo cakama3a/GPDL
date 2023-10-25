@@ -13,7 +13,7 @@ from pygame.locals import *
 # Додано бібліотеку для створення прогрес бару
 from tqdm import tqdm
 
-ver = "2.0.1"
+ver = "2.0.2"
 repeat = 1984
 
 pygame.init()
