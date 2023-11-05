@@ -1,4 +1,4 @@
-ver = "2.0.7"
+ver = "2.0.8"
 print(f" ")
 print(f" ")
 print(f"   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ \033[38;5;208m██╗      █████╗ \033[0m")
@@ -12,7 +12,7 @@ print(f" ")
 print(f" ")
 print(f"Credits:")
 
-repeat = 1000
+repeat = 2000
 
 import serial
 from serial.tools import list_ports
@@ -73,23 +73,6 @@ except IndexError:
 arduino_port = available_ports[port_num]
 ser = serial.Serial(arduino_port, 115200)
 
-# time.sleep(3)
-# pygame.event.pump()
-# button_num = False
-# for button_index in range(joystick.get_numbuttons()):
-#     button_state = joystick.get_button(button_index)
-#     if button_state:
-#         button_num = button_index  # Повертає індекс натиснутої кнопки
-# pygame.event.clear()
-
-# Якщо активна кнопка не знайдена
-# if not button_num:
-#     print("\033[31mActive button not found. Exit.\033[0m")
-#     time.sleep(5)  # Затримка на 5 секунд
-#     exit()
-
-button_num = 1
-
 print(" ")
 print("The test has started:")
 
@@ -105,36 +88,37 @@ def filter_outliers(array):
     upper_index = int(len(sorted_array) * upper_quantile)
     return sorted_array[lower_index:upper_index + 1]
 
-# Ця функція бере натиск з конкретно обраного геймпаду, але не вміє визначати кнопку автоматично
-def read_gamepad_button(joystick, num):
-    pygame.event.pump()
-    button_state = joystick.get_button(num)
-    pygame.event.clear()
-    return button_state
+# Натискання на кнопку конкретного геймпаду
+def read_gamepad_button(joystick):
+    for event in pygame.event.get():
+        if event.type == JOYBUTTONDOWN and event.joy == joystick.get_id():
+            return True
+    return False
 
 newGreen = True
-while counter < repeat:
-    if ser.in_waiting > 0: # Очікуємо на відповідь від ардуіно
-        status = ser.readline().decode("utf-8").strip()
-        if status == "LOW":
-            #low_green = False
-            if newGreen == True:
-                start = time.time()
-                newGreen = False
-                while True:
-                    # Циклічно перевіряємо чи не змінився статус кнопки
-                    button_state = read_gamepad_button(joystick, button_num)
-                    if button_state:
-                        end = time.time()
-                        delay = (end - start)
-                        delay = round(delay * 1000, 2)
-                        delays.append(delay)
-                        print(delay)
-                        counter += 1
-                        ser.write(str("H").encode())
-                        break
-        if status == "HIGH":
-              newGreen = True
+with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', postfix=[0]) as pbar:
+    while counter < repeat:
+        if ser.in_waiting > 0:  # Очікуємо на відповідь від ардуіно
+            status = ser.readline().decode("utf-8").strip()
+            if status == "LOW":
+                if newGreen:
+                    start = time.perf_counter()  # Використовуйте time.perf_counter()
+                    newGreen = False
+                    while True:
+                        button_state = read_gamepad_button(joystick)
+                        if button_state:  # Замість button_state
+                            end = time.perf_counter()  # Використовуйте time.perf_counter()
+                            delay = end - start
+                            delay = round(delay * 1000, 2)
+                            if delay >= 1 and delay < 150:
+                                delays.append(delay)
+                                pbar.postfix[0] = "{:05.2f} ms".format(delay)
+                                pbar.update(1)  # Оновлюємо прогрес бар
+                                counter += 1
+                            ser.write(str("H").encode())
+                            break
+            else:
+                newGreen = True
             
 str_of_numbers = ', '.join(map(str, delays))
 delay_list = filter_outliers(delays)

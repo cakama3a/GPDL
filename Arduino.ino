@@ -1,7 +1,7 @@
 // Налаштовуємо з'єднання
 const int buttonPin1 = 2; // Перший провід, що йде до кнопки на геймпаді
 const int buttonPin2 = 3; // Другий провід, що йде до кнопки на геймпаді
-const int afterPress = 50; // Час між перемиканнями HIGH і LOW (100 мс призводить до дивних показників)
+const int afterPress = 32; // Час між перемиканнями HIGH і LOW (100 мс призводить до дивних показників)
 unsigned long startTime;
 
 void setup() {
