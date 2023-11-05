@@ -1,4 +1,4 @@
-ver = "2.0.4"
+ver = "2.0.5"
 print(f" ")
 print(f" ")
 print(f"   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ \033[38;5;208m██╗      █████╗ \033[0m")
@@ -73,6 +73,21 @@ except IndexError:
 arduino_port = available_ports[port_num]
 ser = serial.Serial(arduino_port, 115200)
 
+time.sleep(3)
+pygame.event.pump()
+button_num = False
+for button_index in range(joystick.get_numbuttons()):
+    button_state = joystick.get_button(button_index)
+    if button_state:
+        button_num = button_index  # Повертає індекс натиснутої кнопки
+pygame.event.clear()
+
+# Якщо активна кнопка не знайдена
+if not button_num:
+    print("\033[31mActive button not found. Exit.\033[0m")
+    time.sleep(5)  # Затримка на 5 секунд
+    exit()
+
 print(" ")
 print("The test has started:")
 
@@ -88,22 +103,17 @@ def filter_outliers(array):
     upper_index = int(len(sorted_array) * upper_quantile)
     return sorted_array[lower_index:upper_index + 1]
 
-# def read_gamepad_button(joystick):
-#     pygame.event.pump()
-#     button_state = joystick.get_button(1)
-#     pygame.event.clear()
-#     return button_state
-
-def read_gamepad_button(joystick):
-    for event in pygame.event.get():
-        if event.type == JOYBUTTONDOWN:
-            return True
-    return False
+# Ця функція бере натиск з конкретно обраного геймпаду, але не вміє визначати кнопку автоматично
+def read_gamepad_button(joystick, num):
+    pygame.event.pump()
+    button_state = joystick.get_button(num)
+    pygame.event.clear()
+    return button_state
 
 # Додано прогрес бар
 with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', postfix=[0]) as pbar:
     while counter < repeat:
-        button_state = read_gamepad_button(joystick)
+        button_state = read_gamepad_button(joystick, button_num)
         if button_state and not prev_button_state:
             ser.write(str("pong\n").encode())
         prev_button_state = button_state
