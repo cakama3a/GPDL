@@ -1,4 +1,4 @@
-ver = "2.0.5"
+ver = "2.0.6"
 print(f" ")
 print(f" ")
 print(f"   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ \033[38;5;208m██╗      █████╗ \033[0m")
@@ -12,7 +12,7 @@ print(f" ")
 print(f" ")
 print(f"Credits:")
 
-repeat = 1984
+repeat = 100
 
 import serial
 from serial.tools import list_ports
@@ -164,25 +164,6 @@ test_key = uuid.uuid4()
 # Отримати інформацію про операційну систему
 os_name = platform.system()  # Назва операційної системи
 os_version = platform.release()  # Версія операційної системи
-
-data = {
-    'test_key': str(test_key),
-    'version': ver,
-    'url': 'https://gamepadla.com',
-    'date': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
-    'driver': joystick_name,
-    'connection': connection,
-    'name': gamepad_name,
-    'os_name': os_name,
-    'os_version': os_version,
-    'min_latency': filteredMin,
-    'avg_latency': filteredAverage_rounded,
-    'max_latency': filteredMax,
-    'polling_rate': '',
-    'jitter': jitter,
-    'mathod': 'ARD',
-    'delay_list': str_of_numbers
-}
 
 # Якщо омилка в розрахунках
 if filteredAverage_rounded > 500:
