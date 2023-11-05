@@ -1,3 +1,19 @@
+ver = "2.0.4"
+print(f" ")
+print(f" ")
+print(f"   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ \033[38;5;208m██╗      █████╗ \033[0m")
+print(f"  ██╔════╝ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗\033[38;5;208m██║     ██╔══██╗\033[0m")
+print(f"  ██║  ███╗███████║██╔████╔██║█████╗  ██████╔╝███████║██║  ██║\033[38;5;208m██║     ███████║\033[0m")
+print(f"  ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ██╔═══╝ ██╔══██║██║  ██║\033[38;5;208m██║     ██╔══██║\033[0m")
+print(f"  ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗██║     ██║  ██║██████╔╝\033[38;5;208m███████╗██║  ██║\033[0m")
+print(f"   ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═════╝ \033[38;5;208m╚══════╝╚═╝  ╚═╝\033[0m")
+print(f"   \033[38;5;208mLatency GPDL Tester\033[0m " + ver + "                            https://gamepadla.com")
+print(f" ")
+print(f" ")
+print(f"Credits:")
+
+repeat = 1984
+
 import serial
 from serial.tools import list_ports
 import pygame
@@ -9,29 +25,16 @@ import numpy as np
 import time
 import uuid
 from pygame.locals import *
-
-# Додано бібліотеку для створення прогрес бару
-from tqdm import tqdm
-
-ver = "2.0.2"
-repeat = 1984
+from tqdm import tqdm # Додано бібліотеку для створення прогрес бару
+print(f"The code was written by John Punch: https://reddit.com/user/JohnnyPunch")
 
 pygame.init()
-
-print(f" ")
-print(f"   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ ██╗      █████╗ ")
-print(f"  ██╔════╝ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗██║     ██╔══██╗")
-print(f"  ██║  ███╗███████║██╔████╔██║█████╗  ██████╔╝███████║██║  ██║██║     ███████║")
-print(f"  ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ██╔═══╝ ██╔══██║██║  ██║██║     ██╔══██║")
-print(f"  ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗██║     ██║  ██║██████╔╝███████╗██║  ██║")
-print(f"   ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝")
-print(f"  Latency tester v{ver} by John Punch: https://www.reddit.com/user/JohnnyPunch")
-print(f" ")
-
 joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
 
+# Виходимл якзо геймпадів не знайдено
 if not joysticks:
-    print("No connected gamepads found")
+    print(" ")
+    print("\033[31mNo connected gamepads found! Exiting.\033[0m")
     time.sleep(5)  # Затримка на 5 секунд
     exit()
 
@@ -49,63 +52,29 @@ except IndexError:
     time.sleep(5)  # Затримка на 5 секунд
     exit()
 
-joystick = joysticks[joystick_num]
-joystick.init()
-
-joystick_name = joystick.get_name()
-print(f"Gamepad mode: {joystick_name}")
-
 # Обираємо порт
 available_ports = [port.device for port in list_ports.comports()]
-print(f" ")
+print(" ")
 print("Available COM ports:")
 for i, port in enumerate(available_ports):
     port_name = list_ports.comports()[i].description
     print(f"{i + 1} - {port_name}")
 
-print("* Notice: You must have a GPDL device to test!")
+print("\033[33m* Notice: You must have a GPDL device to test!\033[0m")
 port_num = int(input("Enter the COM port number for GPDL: ")) - 1
 try:
     port = available_ports[port_num] 
 except IndexError:
-    print("Invalid COM port number. Exiting.")
+    print("\033[31mInvalid COM port number. Exiting.\033[0m")
     time.sleep(5)  # Затримка на 5 секунд
     exit()
 
+# Підключаємося до ардуіно по порту
 arduino_port = available_ports[port_num]
-
 ser = serial.Serial(arduino_port, 115200)
 
-# Обираємо тип підключення
-print(f" ")
-connection = input("Please select connection type (1. Cable, 2. Bluetooth, 3. Dongle): ")
-if connection == "1":
-    connection = "Cable"
-elif connection == "2":
-    connection = "Bluetooth"
-elif connection == "3":
-    connection = "Dongle"
-else:
-    print("Invalid choice. Defaulting to Cable.")
-    connection = "Unset"
-
-# Вписуємо назву геймпаду
-print(f" ")
-gamepad_name = input("Please enter the name of your gamepad: ")
-
-print(f" ")
-repeatq = input("Please select number of tests (1. 2000, 2. 4000, 3. 6000), or enter your own number: ")
-if repeatq == "1":
-    repeat = 2000
-elif repeatq == "2":
-    repeat = 4000
-elif repeatq == "3":
-    repeat = 6000
-else:
-    try:
-        repeat = int(repeatq)
-    except ValueError:
-        print("Invalid input. Please enter a valid number.")
+print(" ")
+print("The test has started:")
 
 counter = 0
 delays = []
@@ -119,15 +88,17 @@ def filter_outliers(array):
     upper_index = int(len(sorted_array) * upper_quantile)
     return sorted_array[lower_index:upper_index + 1]
 
+# def read_gamepad_button(joystick):
+#     pygame.event.pump()
+#     button_state = joystick.get_button(1)
+#     pygame.event.clear()
+#     return button_state
+
 def read_gamepad_button(joystick):
     for event in pygame.event.get():
         if event.type == JOYBUTTONDOWN:
             return True
     return False
-
-# Вибір геймпада
-joystick = joysticks[0]
-joystick.init()
 
 # Додано прогрес бар
 with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', postfix=[0]) as pbar:
@@ -146,8 +117,6 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', post
             #pbar.postfix[0] = f"{int(delay):02d}.{int(delay * 10):02d} ms" # Встановлюємо поточну затримку
             pbar.postfix[0] = "{:05.2f} ms".format(delay)
 
-        pygame.event.pump()
-
 str_of_numbers = ', '.join(map(str, delays))
 delay_list = filter_outliers(delays)
 
@@ -156,22 +125,29 @@ filteredMax = max(delay_list)
 filteredAverage = np.mean(delay_list)
 filteredAverage_rounded = round(filteredAverage, 2)
 
-# polling_rate = round(1000 / filteredAverage, 2)
+polling_rate = round(1000 / filteredAverage, 2)
 jitter = np.std(delay_list)
 jitter = round(jitter, 2)
 
-# print(f" ")
-# print(f"List:")
-# print(f"{delay_list}")
+# Отримати інформацію про операційну систему
+os_name = platform.system()  # Назва операційної системи
+os_version = platform.release()  # Версія операційної системи
+
+# Вивід інформації
 print(f" ")
+print(f"\033[1mTest results:\033[0m")
+print(f"------------------------------------------")
+print(f"OS info:            {os_name} [{os_version}]")
 print(f"Gamepad mode:       {joystick.get_name()}")
-print(f"===")
+print(f" ")
 print(f"Minimal latency:    {filteredMin} ms")
 print(f"Average latency:    {filteredAverage_rounded} ms")
 print(f"Maximum latency:    {filteredMax} ms")
-print(f"===")
-# print(f"Polling Rate:       {polling_rate} Hz")
+print(f" ")
+print(f"Polling Rate:       {polling_rate} Hz")
 print(f"Jitter:             {jitter} ms")
+print(f"------------------------------------------")
+print(f" ")
 
 # Генеруємо унікальний ключ ідентифікатора
 test_key = uuid.uuid4()
@@ -198,6 +174,55 @@ data = {
     'delay_list': str_of_numbers
 }
 
+# Якщо омилка в розрахунках
+if filteredAverage_rounded > 500:
+    print("\033[31mThe test failed with errors. The result will not be saved!\033[0m")
+    answer = input('Quit (Y/N): ').lower()
+    if answer == 'y':
+        exit(1)
+
+# Перехід на gamepadla.com
+answer = input('Open test results on the website (Y/N): ').lower()
+if answer != 'y':
+    exit(1)
+
+# Вписуємо назву геймпаду
+gamepad_name = input("Gamepad name: ")
+
+# Обираємо тип підключення
+connection = input("Current connection (1. Cable, 2. Bluetooth, 3. Dongle): ")
+if connection == "1":
+    connection = "Cable"
+elif connection == "2":
+    connection = "Bluetooth"
+elif connection == "3":
+    connection = "Dongle"
+else:
+    print("Invalid choice. Defaulting to Cable.")
+    connection = "Unset"
+
+# Генеруємо унікальний ключ ідентифікатора
+test_key = uuid.uuid4()
+
+data = {
+    'test_key': str(test_key),
+    'version': ver,
+    'url': 'https://gamepadla.com',
+    'date': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
+    'driver': joystick.get_name(),
+    'connection': connection,
+    'name': gamepad_name,
+    'os_name': os_name,
+    'os_version': os_version,
+    'min_latency': filteredMin,
+    'avg_latency': filteredAverage_rounded,
+    'max_latency': filteredMax,
+    'polling_rate': polling_rate,
+    'jitter': jitter,
+    'mathod': 'ARD',
+    'delay_list': str_of_numbers
+}
+
 # Відправка на сервер
 response = requests.post('https://gamepadla.com/scripts/poster.php', data=data)
 if response.status_code == 200:
@@ -210,3 +235,7 @@ else:
 # Записуємо дані в файл з відступами для кращої читабельності
 with open('data.txt', 'w') as outfile:
     json.dump(data, outfile, indent=4)
+
+answer = input('Quit (Y/N): ').lower()
+if answer == 'y':
+    exit(1)
