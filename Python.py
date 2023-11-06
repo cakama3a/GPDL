@@ -110,7 +110,7 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', post
                             end = time.perf_counter()  # Використовуйте time.perf_counter()
                             delay = end - start
                             delay = round(delay * 1000, 2)
-                            if delay >= 1 and delay < 150:
+                            if delay >= 0.28 and delay < 150:
                                 delays.append(delay)
                                 pbar.postfix[0] = "{:05.2f} ms".format(delay)
                                 pbar.update(1)  # Оновлюємо прогрес бар
