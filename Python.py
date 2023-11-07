@@ -1,4 +1,4 @@
-ver = "2.0.8"
+ver = "2.0.9"
 print(f" ")
 print(f" ")
 print(f"   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ \033[38;5;208m██╗      █████╗ \033[0m")
@@ -23,6 +23,7 @@ import webbrowser
 import platform
 import numpy as np
 import time
+import random
 import uuid
 from pygame.locals import *
 from tqdm import tqdm # Додано бібліотеку для створення прогрес бару
@@ -39,6 +40,7 @@ if not joysticks:
     exit()
 
 # Вибір геймпаду
+print(" ")
 print("Available gamepads:")
 for i, joystick in enumerate(joysticks):
     print(f"{i + 1} - {joystick.get_name()}")
@@ -95,30 +97,27 @@ def read_gamepad_button(joystick):
             return True
     return False
 
-newGreen = True
+
+ser.write(str("H").encode())
 with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', postfix=[0]) as pbar:
     while counter < repeat:
-        if ser.in_waiting > 0:  # Очікуємо на відповідь від ардуіно
-            status = ser.readline().decode("utf-8").strip()
-            if status == "LOW":
-                if newGreen:
-                    start = time.perf_counter()  # Використовуйте time.perf_counter()
-                    newGreen = False
-                    while True:
-                        button_state = read_gamepad_button(joystick)
-                        if button_state:  # Замість button_state
-                            end = time.perf_counter()  # Використовуйте time.perf_counter()
-                            delay = end - start
-                            delay = round(delay * 1000, 2)
-                            if delay >= 0.28 and delay < 150:
-                                delays.append(delay)
-                                pbar.postfix[0] = "{:05.2f} ms".format(delay)
-                                pbar.update(1)  # Оновлюємо прогрес бар
-                                counter += 1
-                            ser.write(str("H").encode())
-                            break
-            else:
-                newGreen = True
+        ser.write(str("L").encode()) # Посилаємо сигнал натискання кнопки
+        start = time.perf_counter()  # Використовуйте time.perf_counter()
+        while True: # Цикл очікування на натискання
+            button_state = read_gamepad_button(joystick) # Статус зміни кнопки
+            if button_state:  # Якщо кнопка була натиснута
+                ser.write(str("H").encode())
+                end = time.perf_counter()  # Використовуйте time.perf_counter()
+                delay = end - start
+                delay = round(delay * 1000, 2)
+                if delay >= 0.28 and delay < 150:
+                    delays.append(delay)
+                    pbar.postfix[0] = "{:05.2f} ms".format(delay)
+                    pbar.update(1)  # Оновлюємо прогрес бар
+                    counter += 1
+                #time.sleep(random.uniform(0.066, 0.077))
+                time.sleep(0.016)
+                break
             
 str_of_numbers = ', '.join(map(str, delays))
 delay_list = filter_outliers(delays)
