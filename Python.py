@@ -1,4 +1,4 @@
-ver = "2.0.9"
+ver = "2.1.0"
 print(f" ")
 print(f" ")
 print(f"   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ \033[38;5;208m██╗      █████╗ \033[0m")
@@ -39,21 +39,6 @@ if not joysticks:
     time.sleep(5)  # Затримка на 5 секунд
     exit()
 
-# Вибір геймпаду
-print(" ")
-print("Available gamepads:")
-for i, joystick in enumerate(joysticks):
-    print(f"{i + 1} - {joystick.get_name()}")
-
-try:
-    joystick_num = int(input("Enter the gamepad number: ")) - 1
-    joystick = joysticks[joystick_num]
-    joystick.init()
-except IndexError:
-    print("Invalid gamepad number. Exiting.")
-    time.sleep(5)  # Затримка на 5 секунд
-    exit()
-
 # Обираємо порт
 available_ports = [port.device for port in list_ports.comports()]
 print(" ")
@@ -70,10 +55,28 @@ except IndexError:
     print("\033[31mInvalid COM port number. Exiting.\033[0m")
     time.sleep(5)  # Затримка на 5 секунд
     exit()
+# Підключаємося до обраного COM-порту    
+try:
+    ser = serial.Serial(port, 115200) 
+except serial.SerialException as e:
+    print(f"\033[31mError opening {port}: {e}\033[0m")
+    time.sleep(5)  # Затримка на 5 секунд
+    exit()
+    
+# Вибір геймпаду
+print(" ")
+print("Available gamepads:")
+for i, joystick in enumerate(joysticks):
+    print(f"{i + 1} - {joystick.get_name()}")
 
-# Підключаємося до ардуіно по порту
-arduino_port = available_ports[port_num]
-ser = serial.Serial(arduino_port, 115200)
+try:
+    joystick_num = int(input("Enter the gamepad number: ")) - 1
+    joystick = joysticks[joystick_num]
+    joystick.init()
+except IndexError:
+    print("Invalid gamepad number. Exiting.")
+    time.sleep(5)  # Затримка на 5 секунд
+    exit()
 
 print(" ")
 print("The test has started:")
@@ -97,27 +100,49 @@ def read_gamepad_button(joystick):
             return True
     return False
 
+# def read_gamepad_button(joystick, num):
+#     pygame.event.pump()
+#     button_state = joystick.get_button(num)
+#     pygame.event.clear()
+#     return button_state
 
-ser.write(str("H").encode())
-with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', postfix=[0]) as pbar:
+def sleep_ms(milliseconds):
+    seconds = milliseconds / 1000.0
+    time.sleep(seconds)
+
+sleep_ms(2000)
+ser.write(str("H").encode()) # Відпускаємо кнопку
+sleep_ms(200)
+max_pause = 33
+
+with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dynamic_ncols=False, postfix=[0]) as pbar:
     while counter < repeat:
         ser.write(str("L").encode()) # Посилаємо сигнал натискання кнопки
         start = time.perf_counter()  # Використовуйте time.perf_counter()
         while True: # Цикл очікування на натискання
             button_state = read_gamepad_button(joystick) # Статус зміни кнопки
             if button_state:  # Якщо кнопка була натиснута
-                ser.write(str("H").encode())
                 end = time.perf_counter()  # Використовуйте time.perf_counter()
                 delay = end - start
                 delay = round(delay * 1000, 2)
+                ser.write(str("H").encode()) # Посилаємо сигнал на підняття кнопки
+                #print(delay)
                 if delay >= 0.28 and delay < 150:
                     delays.append(delay)
                     pbar.postfix[0] = "{:05.2f} ms".format(delay)
                     pbar.update(1)  # Оновлюємо прогрес бар
                     counter += 1
-                #time.sleep(random.uniform(0.066, 0.077))
-                time.sleep(0.016)
+                
+                # Динамічний розмір паузи
+                if (delay + 16 > max_pause):
+                    max_pause = round(delay + 33)
+                    print(max_pause)
+                    print(max_pause)
+                
+                sleep = max_pause-delay
+                sleep_ms(sleep)
                 break
+            sleep_ms(1) # Обмежуємо швидкчть вторинного циклу
             
 str_of_numbers = ', '.join(map(str, delays))
 delay_list = filter_outliers(delays)
