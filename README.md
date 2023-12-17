@@ -10,7 +10,8 @@
 A website with a catalog of tested gamepads: https://gamepadla.com  
   
 ⚠️ **WARNING:**  
-To ensure the safety of the gamepad, connect the arduino to the gamepad's contacts through 1.5kΩ ![resistors](https://github.com/cakama3a/GPDL/assets/15096106/a90916d8-a3ef-45fa-bf2f-168d5e97acfd)
+To ensure the safety of the gamepad, connect the arduino to the gamepad's contacts through 1.5kΩ resistors
+![resistors](https://github.com/cakama3a/GPDL/assets/15096106/a90916d8-a3ef-45fa-bf2f-168d5e97acfd)
 The GPDL tester may damage your device, especially in cable connection mode. Use at your own risk! 
 
 
