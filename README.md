@@ -19,3 +19,4 @@ Arduino Nano - https://amzn.to/3tSbvB3 | https://s.click.aliexpress.com/e/_DczmE
 Cable - https://s.click.aliexpress.com/e/_DlX7bmn | https://amzn.to/3MaUU1F  
 Tape - https://s.click.aliexpress.com/e/_DegtRf1  
 STL - https://www.thingiverse.com/thing:6283094
+Resistor 1.5K x2 - https://s.click.aliexpress.com/e/_DFponPJ
