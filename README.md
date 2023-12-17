@@ -8,7 +8,9 @@
      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝
 
 A website with a catalog of tested gamepads: https://gamepadla.com  
-⚠️ **WARNING:** The GPDL tester may damage your device, especially in cable connection mode. Use at your own risk!
+⚠️ **WARNING:**  
+To ensure the safety of the gamepad, connect the arduino to the gamepad's contacts through 1.5kΩ resistors, as in this photo.  
+The GPDL tester may damage your device, especially in cable connection mode. Use at your own risk!
 
 ABOUT GAMEPADLA  
 The gamepadla project was created to test the latency of game controllers. It is open-source and allows any enthusiast to measure gamepad latency with the tools at hand in an Arduino-based device.
