@@ -1,4 +1,4 @@
-ver = "2.1.0"
+ver = "2.1.1"
 print(f" ")
 print(f" ")
 print(f"   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ \033[38;5;208m██╗      █████╗ \033[0m")
@@ -7,7 +7,7 @@ print(f"  ██║  ███╗███████║██╔████�
 print(f"  ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ██╔═══╝ ██╔══██║██║  ██║\033[38;5;208m██║     ██╔══██║\033[0m")
 print(f"  ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗██║     ██║  ██║██████╔╝\033[38;5;208m███████╗██║  ██║\033[0m")
 print(f"   ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═════╝ \033[38;5;208m╚══════╝╚═╝  ╚═╝\033[0m")
-print(f"   \033[38;5;208mLatency GPDL Tester\033[0m " + ver + "                            https://gamepadla.com")
+print(f"   \033[38;5;208mGPDL Latency Tester\033[0m " + ver + "                            https://gamepadla.com")
 print(f" ")
 print(f" ")
 print(f"Credits:")
@@ -61,7 +61,7 @@ except serial.SerialException as e:
     print(f"\033[31mError opening {port}: {e}\033[0m")
     time.sleep(5)  # Затримка на 5 секунд
     exit()
-    
+
 # Вибір геймпаду
 print(" ")
 print("Available gamepads:")
@@ -76,6 +76,13 @@ except IndexError:
     print("Invalid gamepad number. Exiting.")
     time.sleep(5)  # Затримка на 5 секунд
     exit()
+
+# Вибір методики замикання
+print(" ")
+print("How to press the button?")
+print("1: Default - two-pin connection (for wireless modes)")
+print("2: Alternative - One pin connection (For cable mode).")
+connection_mode = int(input("Select the test mode: "))
 
 print(" ")
 print("The test has started:")
@@ -110,13 +117,21 @@ def sleep_ms(milliseconds):
     time.sleep(seconds)
 
 sleep_ms(2000)
-ser.write(str("H").encode()) # Відпускаємо кнопку
+
+if connection_mode == 1:
+    ser.write(str("H").encode()) # Відпускаємо кнопку
+else:
+    ser.write(str("L").encode()) # Відпускаємо кнопку по одномк контакту
+
 sleep_ms(200)
 max_pause = 33
 
 with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dynamic_ncols=False, postfix=[0]) as pbar:
     while counter < repeat:
-        ser.write(str("L").encode()) # Посилаємо сигнал натискання кнопки
+        if connection_mode == 1:
+            ser.write(str("L").encode()) # Посилаємо сигнал натискання кнопки
+        else:
+            ser.write(str("H").encode()) # Посилаємо сигнал натискання кнопки по одному контакту
         start = time.perf_counter()  # Використовуйте time.perf_counter()
         while True: # Цикл очікування на натискання
             button_state = read_gamepad_button(joystick) # Статус зміни кнопки
@@ -135,8 +150,6 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dyna
                 # Динамічний розмір паузи
                 if (delay + 16 > max_pause):
                     max_pause = round(delay + 33)
-                    print(max_pause)
-                    print(max_pause)
                 
                 sleep = max_pause-delay
                 sleep_ms(sleep)
@@ -220,6 +233,7 @@ data = {
     'connection': connection,
     'name': gamepad_name,
     'os_name': os_name,
+    'sleep_time': sleep,
     'os_version': os_version,
     'min_latency': filteredMin,
     'avg_latency': filteredAverage_rounded,
