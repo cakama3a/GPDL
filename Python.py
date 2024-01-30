@@ -1,4 +1,4 @@
-ver = "2.1.1"
+ver = "2.1.2"
 print(f" ")
 print(f" ")
 print(f"   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ \033[38;5;208m██╗      █████╗ \033[0m")
@@ -80,8 +80,8 @@ except IndexError:
 # Вибір методики замикання
 print(" ")
 print("How to press the button?")
-print("1: Default - two-pin connection (for wireless modes)")
-print("2: Alternative - One pin connection (For cable mode).")
+print("1: Default - Two-wire mode")
+print("2: Alternative - One wire mode (Only use if above mode fails)")
 connection_mode = int(input("Select the test mode: "))
 
 print(" ")
