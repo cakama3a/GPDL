@@ -1,11 +1,14 @@
 # Gamepadla - GPDL Latency tester
-![image](https://github.com/cakama3a/GPDL/assets/15096106/aef7f17d-5816-456e-bc39-dc412e1ee856)
+![image](https://github.com/cakama3a/GPDL/assets/15096106/0518b60b-ef90-43f7-9594-721d912dac04)
 
 A website with a catalog of tested gamepads: https://gamepadla.com  
 
 ABOUT GAMEPADLA  
 The gamepadla project was created to test the latency of game controllers. It is open-source and allows any enthusiast to measure gamepad latency with the tools at hand in an Arduino-based device.
 Watch the video for more detailed instructions on how it works https://www.youtube.com/watch?v=epm2li1hrK8  
+
+![image](https://github.com/cakama3a/GPDL/assets/15096106/cd36b1d5-f1b3-49d9-b0e8-a1b1e9211546)
+
   
 NECESSARY MATERIALS  
 Arduino Nano - https://amzn.to/3tSbvB3 | https://s.click.aliexpress.com/e/_DczmEt1  
