@@ -1,6 +1,7 @@
-ver = "2.1.3"
+ver = "2.1.4"
 repeat = 2000
-from colorama import Fore, Back, Style
+from colorama import init, Fore, Back, Style
+init()
 
 print(f" ")
 print(f" ")
@@ -10,7 +11,7 @@ print("  ██║  ███╗███████║██╔████╔
 print("  ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ██╔═══╝ ██╔══██║██║  ██║" + Fore.LIGHTRED_EX + "██║     ██╔══██║" + Fore.RESET)
 print("  ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗██║     ██║  ██║██████╔╝" + Fore.LIGHTRED_EX + "███████╗██║  ██║" + Fore.RESET)
 print("   ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═════╝ " + Fore.LIGHTRED_EX + "╚══════╝╚═╝  ╚═╝" + Fore.RESET)
-print(Fore.CYAN + "    " + "GPDL Latency Tester" + Fore.RESET + "  " + ver + "                           https://gamepadla.com")
+print(Fore.LIGHTRED_EX + "    " + "GPDL Latency Tester" + Fore.RESET + "  " + ver + "                           https://gamepadla.com")
 print(f" ")
 print(f" ")
 print(f"Credits:")
@@ -78,11 +79,12 @@ except IndexError:
     exit()
 
 # Вибір методики замикання (Select which wiring method)
-print(" ")
-print("How to press the button?")
-print("1: Default - Two-wire mode")
-print("2: Alternative - One wire mode (Only use if above mode fails)")
-connection_mode = int(input("Select the test mode: "))
+# print(" ")
+# print("How to press the button?")
+# print("1: Default - Two-wire mode")
+# print("2: Alternative - One wire mode (Only use if above mode fails)")
+# connection_mode = int(input("Select the test mode: "))
+connection_mode = 1
 
 print(" ")
 print("The test has started:")
