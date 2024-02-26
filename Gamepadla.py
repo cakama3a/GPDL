@@ -1,5 +1,6 @@
-ver = "2.1.5"
+ver = "2.1.6"
 repeat = 2000
+
 from colorama import Fore, Back, Style
 import serial
 from serial.tools import list_ports
@@ -28,7 +29,7 @@ print(f" ")
 print(f"Credits:")
 print(f"The code was written by John Punch: https://reddit.com/user/JohnnyPunch")
 import pygame
-from pygame.locals import *
+# from pygame.locals import *
 pygame.init()
 
 joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
