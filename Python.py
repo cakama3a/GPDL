@@ -1,19 +1,20 @@
-ver = "2.1.2"
+ver = "2.1.3"
+repeat = 2000
+from colorama import Fore, Back, Style
+
 print(f" ")
 print(f" ")
-print(f"   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ \033[38;5;208m██╗      █████╗ \033[0m")
-print(f"  ██╔════╝ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗\033[38;5;208m██║     ██╔══██╗\033[0m")
-print(f"  ██║  ███╗███████║██╔████╔██║█████╗  ██████╔╝███████║██║  ██║\033[38;5;208m██║     ███████║\033[0m")
-print(f"  ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ██╔═══╝ ██╔══██║██║  ██║\033[38;5;208m██║     ██╔══██║\033[0m")
-print(f"  ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗██║     ██║  ██║██████╔╝\033[38;5;208m███████╗██║  ██║\033[0m")
-print(f"   ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═════╝ \033[38;5;208m╚══════╝╚═╝  ╚═╝\033[0m")
-print(f"   \033[38;5;208mGPDL Latency Tester\033[0m " + ver + "                            https://gamepadla.com")
+print("   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ " + Fore.LIGHTRED_EX + "██╗      █████╗ " + Fore.RESET)
+print("  ██╔════╝ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗" + Fore.LIGHTRED_EX + "██║     ██╔══██╗" + Fore.RESET)
+print("  ██║  ███╗███████║██╔████╔██║█████╗  ██████╔╝███████║██║  ██║" + Fore.LIGHTRED_EX + "██║     ███████║" + Fore.RESET)
+print("  ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ██╔═══╝ ██╔══██║██║  ██║" + Fore.LIGHTRED_EX + "██║     ██╔══██║" + Fore.RESET)
+print("  ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗██║     ██║  ██║██████╔╝" + Fore.LIGHTRED_EX + "███████╗██║  ██║" + Fore.RESET)
+print("   ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═════╝ " + Fore.LIGHTRED_EX + "╚══════╝╚═╝  ╚═╝" + Fore.RESET)
+print(Fore.CYAN + "    " + "GPDL Latency Tester" + Fore.RESET + "  " + ver + "                           https://gamepadla.com")
 print(f" ")
 print(f" ")
 print(f"Credits:")
-
-repeat = 2000
-
+print(f"The code was written by John Punch: https://reddit.com/user/JohnnyPunch")
 import serial
 from serial.tools import list_ports
 import pygame
@@ -26,7 +27,6 @@ import time
 import uuid
 from pygame.locals import *
 from tqdm import tqdm # Додано бібліотеку для створення прогрес бару (Added a library to create a progress bar)
-print(f"The code was written by John Punch: https://reddit.com/user/JohnnyPunch")
 
 pygame.init()
 joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
@@ -176,17 +176,17 @@ os_version = platform.release()  # Версія операційної сист�
 print(f" ")
 print(f"\033[1mTest results:\033[0m")
 print(f"------------------------------------------")
-print(f"OS info:            {os_name} [{os_version}]")
+#print(f"OS info:            {os_name} [{os_version}]")
 print(f"Gamepad mode:       {joystick.get_name()}")
 print(f" ")
 print(f"Minimal latency:    {filteredMin} ms")
 print(f"Average latency:    {filteredAverage_rounded} ms")
 print(f"Maximum latency:    {filteredMax} ms")
 print(f" ")
-print(f"Polling Rate:       {polling_rate} Hz")
+#print(f"Polling Rate:       {polling_rate} Hz")
 print(f"Jitter:             {jitter} ms")
 print(f"------------------------------------------")
-print(f"The results of the Polling rate test in this method are calculated very roughly and may differ significantly from the actual results.")
+#print(f"The results of the Polling rate test in this method are calculated very roughly and may differ significantly from the actual results.")
 print(f" ")
 
 # Генеруємо унікальний ключ ідентифікатора (we generate a unique identifier key)
