@@ -1,7 +1,18 @@
-ver = "2.1.4"
+ver = "2.1.5"
 repeat = 2000
-from colorama import init, Fore, Back, Style
-init()
+from colorama import Fore, Back, Style
+import serial
+from serial.tools import list_ports
+import pygame
+import json
+import requests
+import webbrowser
+import platform
+import numpy as np
+import time
+import uuid
+from pygame.locals import *
+from tqdm import tqdm # Додано бібліотеку для створення прогрес бару (Added a library to create a progress bar)
 
 print(f" ")
 print(f" ")
@@ -16,20 +27,8 @@ print(f" ")
 print(f" ")
 print(f"Credits:")
 print(f"The code was written by John Punch: https://reddit.com/user/JohnnyPunch")
-import serial
-from serial.tools import list_ports
-import pygame
-import json
-import requests
-import webbrowser
-import platform
-import numpy as np
-import time
-import uuid
-from pygame.locals import *
-from tqdm import tqdm # Додано бібліотеку для створення прогрес бару (Added a library to create a progress bar)
-
 pygame.init()
+
 joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
 
 # Виходимл якзо геймпадів не знайдено (No gamepads were found)
