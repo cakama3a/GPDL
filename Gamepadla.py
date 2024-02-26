@@ -11,7 +11,7 @@ print("  ██║  ███╗███████║██╔████╔
 print("  ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ██╔═══╝ ██╔══██║██║  ██║" + Fore.LIGHTRED_EX + "██║     ██╔══██║" + Fore.RESET)
 print("  ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗██║     ██║  ██║██████╔╝" + Fore.LIGHTRED_EX + "███████╗██║  ██║" + Fore.RESET)
 print("   ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═════╝ " + Fore.LIGHTRED_EX + "╚══════╝╚═╝  ╚═╝" + Fore.RESET)
-print(Fore.LIGHTRED_EX + "    " + "GPDL Latency Tester" + Fore.RESET + "  " + ver + "                           https://gamepadla.com")
+print(Fore.LIGHTRED_EX + "    " + "GPDL Latency Tester" + Fore.RESET + "  " + ver + "                          https://gamepadla.com")
 print(f" ")
 print(f" ")
 print(f"Credits:")
