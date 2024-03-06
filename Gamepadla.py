@@ -1,4 +1,4 @@
-ver = "2.1.7"
+ver = "2.1.8"
 repeat = 2000
 
 from colorama import Fore, Back, Style
@@ -34,7 +34,7 @@ pygame.init()
 
 joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
 
-# Виходимл якзо геймпадів не знайдено (No gamepads were found)
+# Виходимл якщо геймпадів не знайдено (No gamepads were found)
 if not joysticks:
     print(" ")
     print("\033[31mNo connected gamepads found! Exiting.\033[0m")
@@ -68,6 +68,7 @@ except serial.SerialException as e:
 # Вибір геймпаду (Gamepad selection)
 print(" ")
 print("Available gamepads:")
+print("\033[33mAttention:\033[0m When connecting a gamepad wired, connect only one pin of the tester!")
 for i, joystick in enumerate(joysticks):
     print(f"{i + 1} - {joystick.get_name()}")
 
