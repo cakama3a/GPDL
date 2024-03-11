@@ -13,7 +13,8 @@ Watch the video for more detailed instructions on how it works https://www.youtu
 NECESSARY MATERIALS  
 Arduino Nano - https://amzn.to/3tSbvB3 | https://s.click.aliexpress.com/e/_DczmEt1  
 Cable - https://s.click.aliexpress.com/e/_DlX7bmn | https://amzn.to/3MaUU1F  
-Tape - https://s.click.aliexpress.com/e/_DegtRf1  
+Gecko tape - https://s.click.aliexpress.com/e/_DegtRf1  
+or Conductive tape - https://amzn.to/43b0x7m  
 STL - https://www.thingiverse.com/thing:6283094  
 Resistor 1.5K x2 - https://s.click.aliexpress.com/e/_DFponPJ
 
@@ -21,4 +22,3 @@ Resistor 1.5K x2 - https://s.click.aliexpress.com/e/_DFponPJ
 To ensure the safety of the gamepad, connect the arduino to the gamepad's contacts through 1.5kΩ resistors
 ![DSC01762_2](https://github.com/cakama3a/GPDL/assets/15096106/05322302-6f0e-494a-adc2-253bdd8cb30b)
 But even with these precautions, the author cannot guarantee that the gamepad will not malfunction, so do all tests at your own risk!  
-
