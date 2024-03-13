@@ -2,6 +2,7 @@
 ![image](https://github.com/cakama3a/GPDL/assets/15096106/0518b60b-ef90-43f7-9594-721d912dac04)
 
 A website with a catalog of tested gamepads: https://gamepadla.com  
+[Reddit thread](https://www.reddit.com/r/Gamepadla/comments/1bdqduh/help_with_building_and_configuring_the_arduino/) to help you create and configure your own GPDL tester  
 
 ABOUT GAMEPADLA  
 The gamepadla project was created to test the latency of game controllers. It is open-source and allows any enthusiast to measure gamepad latency with the tools at hand in an Arduino-based device.
