@@ -1,4 +1,4 @@
-ver = "2.1.7"
+ver = "2.1.8"
 repeat = 2000
 
 from colorama import Fore, Back, Style
@@ -172,15 +172,16 @@ polling_rate = round(1000 / filteredAverage, 2)
 jitter = np.std(delay_list)
 jitter = round(jitter, 2)
 
-# Отримати інформацію про операційну систему (get information about the operating system)
+# OS Version
 os_name = platform.system()  # Назва операційної системи (the name of the operating system)
-os_version = platform.release()  # Версія операційної системи (the operating system version)
+uname = platform.uname()
+os_version = uname.version
 
 # Вивід інформації (output of information)
 print(f" ")
 print(f"\033[1mTest results:\033[0m")
 print(f"------------------------------------------")
-#print(f"OS info:            {os_name} [{os_version}]")
+print(f"OS:                 {os_name} {os_version}")
 print(f"Gamepad mode:       {joystick.get_name()}")
 print(f" ")
 print(f"Minimal latency:    {filteredMin} ms")
