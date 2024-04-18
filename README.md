@@ -17,7 +17,7 @@ Cable - https://s.click.aliexpress.com/e/_DlX7bmn | https://amzn.to/3MaUU1F
 Gecko tape - https://s.click.aliexpress.com/e/_DegtRf1  
 or Conductive tape - https://amzn.to/43b0x7m  
 STL - https://www.thingiverse.com/thing:6283094  
-Resistor 1.5K x2 - https://s.click.aliexpress.com/e/_DFponPJ
+Resistor 1.5K x2 - [https://s.click.aliexpress.com/e/_DFponPJ](https://s.click.aliexpress.com/e/_DeI5r55)
 
 ⚠️ **WARNING:**  
 To ensure the safety of the gamepad, connect the arduino to the gamepad's contacts through 1.5kΩ resistors
