@@ -23,3 +23,6 @@ Resistor 1.5K x2 - [https://s.click.aliexpress.com/e/_DFponPJ](https://s.click.a
 To ensure the safety of the gamepad, connect the arduino to the gamepad's contacts through 1.5kΩ resistors
 ![DSC01762_2](https://github.com/cakama3a/GPDL/assets/15096106/05322302-6f0e-494a-adc2-253bdd8cb30b)
 But even with these precautions, the author cannot guarantee that the gamepad will not malfunction, so do all tests at your own risk!  
+
+SUPPORT ME  
+https://ko-fi.com/gamepadla  
