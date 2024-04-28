@@ -28,6 +28,8 @@ print(f" ")
 
 print(f"Credits:")
 print(f"The code was written by John Punch: https://reddit.com/user/JohnnyPunch")
+print(f"Support Me on: https://ko-fi.com/gamepadla")
+print()
 import pygame
 from pygame.locals import *
 pygame.init()
@@ -81,12 +83,6 @@ except IndexError:
     time.sleep(5)  # Затримка на 5 секунд (Delay for 5 seconds)
     exit()
 
-# Вибір методики замикання (Select which wiring method)
-# print(" ")
-# print("How to press the button?")
-# print("1: Default - Two-wire mode")
-# print("2: Alternative - One wire mode (Only use if above mode fails)")
-# connection_mode = int(input("Select the test mode: "))
 connection_mode = 1
 
 print(" ")
@@ -110,12 +106,6 @@ def read_gamepad_button(joystick):
         if event.type == JOYBUTTONDOWN and event.joy == joystick.get_id():
             return True
     return False
-
-# def read_gamepad_button(joystick, num):
-#     pygame.event.pump()
-#     button_state = joystick.get_button(num)
-#     pygame.event.clear()
-#     return button_state
 
 def sleep_ms(milliseconds):
     seconds = milliseconds / 1000.0
