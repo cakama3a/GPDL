@@ -1,5 +1,6 @@
 # GPDL Latency tester
-![image](https://github.com/cakama3a/GPDL/assets/15096106/0518b60b-ef90-43f7-9594-721d912dac04)
+![image](https://github.com/cakama3a/GPDL/assets/15096106/f36c402c-d134-44ec-a0d6-25c60e4cc688)
+  
 
 [Download GPDL program](https://github.com/cakama3a/GPDL/tree/main/dist) for Windows 10/11  
 [Arduino code](https://github.com/cakama3a/GPDL/blob/main/Arduino.ino) this code should be flashed to the Arduino via [Arduino IDE](https://www.arduino.cc/en/software/)  
