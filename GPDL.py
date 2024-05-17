@@ -1,4 +1,4 @@
-ver = "2.1.8"
+ver = "2.2.0"
 repeat = 2000
 
 from colorama import Fore, Back, Style
@@ -16,19 +16,20 @@ from tqdm import tqdm # Додано бібліотеку для створен�
 
 print(f" ")
 print(f" ")
-print("   ██████╗  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ " + Fore.LIGHTRED_EX + "██╗      █████╗ " + Fore.RESET)
-print("  ██╔════╝ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗" + Fore.LIGHTRED_EX + "██║     ██╔══██╗" + Fore.RESET)
-print("  ██║  ███╗███████║██╔████╔██║█████╗  ██████╔╝███████║██║  ██║" + Fore.LIGHTRED_EX + "██║     ███████║" + Fore.RESET)
-print("  ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ██╔═══╝ ██╔══██║██║  ██║" + Fore.LIGHTRED_EX + "██║     ██╔══██║" + Fore.RESET)
-print("  ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗██║     ██║  ██║██████╔╝" + Fore.LIGHTRED_EX + "███████╗██║  ██║" + Fore.RESET)
-print("   ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═════╝ " + Fore.LIGHTRED_EX + "╚══════╝╚═╝  ╚═╝" + Fore.RESET)
-print(Fore.LIGHTRED_EX + "    " + "GPDL Latency Tester" + Fore.RESET + "  " + ver + "                          https://gamepadla.com")
+print("   ██████╗ ██████╗ ██████╗ " + Fore.LIGHTRED_EX + "██╗     " + Fore.RESET)
+print("  ██╔════╝ ██╔══██╗██╔══██╗" + Fore.LIGHTRED_EX + "██║     " + Fore.RESET)
+print("  ██║  ███╗██████╔╝██║  ██║" + Fore.LIGHTRED_EX + "██║     " + Fore.RESET)
+print("  ██║   ██║██╔═══╝ ██║  ██║" + Fore.LIGHTRED_EX + "██║     " + Fore.RESET)
+print("  ╚██████╔╝██║     ██████╔╝" + Fore.LIGHTRED_EX + "███████╗" + Fore.RESET)
+print("   ╚═════╝ ╚═╝     ╚═════╝ " + Fore.LIGHTRED_EX + "╚══════╝" + Fore.RESET)
+print(Fore.LIGHTRED_EX + "   " + "Gamepad Latency Tester" + Fore.RESET + "  " + ver)
+print(f"   https://gamepadla.com")
 print(f" ")
 print(f" ")
 
 print(f"Credits:")
-print(f"The code was written by John Punch: https://reddit.com/user/JohnnyPunch")
-print(f"Support Me on: https://ko-fi.com/gamepadla")
+print(f"Code written by John Punch: https://reddit.com/user/JohnnyPunch")
+print(f"You Can Support Me: https://ko-fi.com/gamepadla")
 print()
 import pygame
 from pygame.locals import *
@@ -70,7 +71,7 @@ except serial.SerialException as e:
 # Вибір геймпаду (Gamepad selection)
 print(" ")
 print("Available gamepads:")
-print("\033[33mAttention:\033[0m When connecting a gamepad wired, connect only one pin of the tester!")
+print("\033[33mAttention:\033[0m If your gamepad is connected in wired mode, only one (Red) tester wire should be connected!")
 for i, joystick in enumerate(joysticks):
     print(f"{i + 1} - {joystick.get_name()}")
 
@@ -83,10 +84,9 @@ except IndexError:
     time.sleep(5)  # Затримка на 5 секунд (Delay for 5 seconds)
     exit()
 
-connection_mode = 1
-
 print(" ")
 print("The test has started:")
+print("\033[33mIf the bar does not progress, try swapping the contacts.\033[0m")
 
 counter = 0
 delays = []
@@ -112,21 +112,14 @@ def sleep_ms(milliseconds):
     time.sleep(seconds)
 
 sleep_ms(2000)
-
-if connection_mode == 1:
-    ser.write(str("H").encode()) # Відпускаємо кнопку (release the button)
-else:
-    ser.write(str("L").encode()) # Відпускаємо кнопку по одномк контакту (release the button for one contact)
+ser.write(str("H").encode()) # Відпускаємо кнопку (release the button)
 
 sleep_ms(200)
 max_pause = 33
 
 with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dynamic_ncols=False, postfix=[0]) as pbar:
     while counter < repeat:
-        if connection_mode == 1:
-            ser.write(str("L").encode()) # Посилаємо сигнал натискання кнопки (send a button press signal)
-        else:
-            ser.write(str("H").encode()) # Посилаємо сигнал натискання кнопки по одному контакту
+        ser.write(str("L").encode()) # Посилаємо сигнал натискання кнопки (send a button press signal)
         start = time.perf_counter()  # Використовуйте time.perf_counter() (start a timer)
         while True: # Цикл очікування на натискання (click wait cycle)
             button_state = read_gamepad_button(joystick) # Статус зміни кнопки (Button change status)
