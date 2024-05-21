@@ -1,5 +1,6 @@
-ver = "2.2.0"
+ver = "2.2.2"
 repeat = 2000
+max_pause = 33
 
 from colorama import Fore, Back, Style
 import serial
@@ -16,21 +17,19 @@ from tqdm import tqdm # Додано бібліотеку для створен�
 
 print(f" ")
 print(f" ")
-print("   ██████╗ ██████╗ ██████╗ " + Fore.LIGHTRED_EX + "██╗     " + Fore.RESET)
-print("  ██╔════╝ ██╔══██╗██╔══██╗" + Fore.LIGHTRED_EX + "██║     " + Fore.RESET)
-print("  ██║  ███╗██████╔╝██║  ██║" + Fore.LIGHTRED_EX + "██║     " + Fore.RESET)
-print("  ██║   ██║██╔═══╝ ██║  ██║" + Fore.LIGHTRED_EX + "██║     " + Fore.RESET)
-print("  ╚██████╔╝██║     ██████╔╝" + Fore.LIGHTRED_EX + "███████╗" + Fore.RESET)
-print("   ╚═════╝ ╚═╝     ╚═════╝ " + Fore.LIGHTRED_EX + "╚══════╝" + Fore.RESET)
-print(Fore.LIGHTRED_EX + "   " + "Gamepad Latency Tester" + Fore.RESET + "  " + ver)
-print(f"   https://gamepadla.com")
+print("   ██████╗ ██████╗ ██████╗ " + Fore.LIGHTRED_EX + "██╗     " + Fore.RESET + "")
+print("  ██╔════╝ ██╔══██╗██╔══██╗" + Fore.LIGHTRED_EX + "██║     " + Fore.RESET + Fore.LIGHTRED_EX + "    " + "Gamepad Latency Tester" + Fore.RESET + " " + ver)
+print("  ██║  ███╗██████╔╝██║  ██║" + Fore.LIGHTRED_EX + "██║     " + Fore.RESET + "    Website: https://gamepadla.com")
+print("  ██║   ██║██╔═══╝ ██║  ██║" + Fore.LIGHTRED_EX + "██║     " + Fore.RESET + "    Author: John Punch")
+print("  ╚██████╔╝██║     ██████╔╝" + Fore.LIGHTRED_EX + "███████╗" + Fore.RESET + "")
+print("   ╚═════╝ ╚═╝     ╚═════╝ " + Fore.LIGHTRED_EX + "╚══════╝" + Fore.RESET + "")
 print(f" ")
 print(f" ")
 
 print(f"Credits:")
-print(f"Code written by John Punch: https://reddit.com/user/JohnnyPunch")
-print(f"You Can Support Me: https://ko-fi.com/gamepadla")
-print()
+print(f"My Reddit page: https://reddit.com/user/JohnnyPunch")
+print(f"Support Me: https://ko-fi.com/gamepadla")
+print(f"---")
 import pygame
 from pygame.locals import *
 pygame.init()
@@ -40,9 +39,9 @@ joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_coun
 # Виходимл якщо геймпадів не знайдено (No gamepads were found)
 if not joysticks:
     print(" ")
-    print("\033[31mNo connected gamepads found! Exiting.\033[0m")
-    time.sleep(5)  # Затримка на 5 секунд (Delay for 5 seconds)
-    exit()
+    print("\033[31mNo connected gamepads found!\033[0m")
+    input("Press Enter to exit...")
+    exit(1)
 
 # Обираємо порт
 available_ports = [port.device for port in list_ports.comports()]
@@ -79,13 +78,13 @@ try:
     joystick_num = int(input("Enter the gamepad number: ")) - 1
     joystick = joysticks[joystick_num]
     joystick.init()
-except IndexError:
-    print("Invalid gamepad number. Exiting.")
-    time.sleep(5)  # Затримка на 5 секунд (Delay for 5 seconds)
-    exit()
+except IndexError: # Виходимо з програми якщо обратинй неправильний геймпад (Exit the program if you select the wrong gamepad)
+    print("\033[31mInvalid gamepad number!\033[0m")
+    input("Press Enter to exit...")
+    exit(1)
 
 print(" ")
-print("The test has started:")
+print("The test will begin in 3 seconds...")
 print("\033[33mIf the bar does not progress, try swapping the contacts.\033[0m")
 
 counter = 0
@@ -113,18 +112,23 @@ def sleep_ms(milliseconds):
 
 sleep_ms(2000)
 ser.write(str("H").encode()) # Відпускаємо кнопку (release the button)
-
-sleep_ms(200)
-max_pause = 33
+sleep_ms(100)
+ser.write(str("L").encode())
+sleep_ms(100)
+ser.write(str("H").encode())
+sleep_ms(1000)
 
 with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dynamic_ncols=False, postfix=[0]) as pbar:
     while counter < repeat:
         ser.write(str("L").encode()) # Посилаємо сигнал натискання кнопки (send a button press signal)
         start = time.perf_counter()  # Використовуйте time.perf_counter() (start a timer)
         while True: # Цикл очікування на натискання (click wait cycle)
+            current_time = time.perf_counter()
+            elapsed_time = (current_time - start) * 1000  # в мілісекундах
             button_state = read_gamepad_button(joystick) # Статус зміни кнопки (Button change status)
             if button_state:  # Якщо кнопка була натиснута (button was pressed)
-                end = time.perf_counter()  # Використовуйте time.perf_counter() (end timer)
+                # end = time.perf_counter()  # Використовуйте time.perf_counter() (end timer)
+                end = current_time  # Використовуйте time.perf_counter() (end timer)
                 delay = end - start # timer duration
                 delay = round(delay * 1000, 2)
                 ser.write(str("H").encode()) # Посилаємо сигнал на підняття кнопки (send raise the button signal)
@@ -138,10 +142,20 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dyna
                 # Динамічний розмір паузи (dynamic pause size)
                 if (delay + 16 > max_pause):
                     max_pause = round(delay + 33)
+                    if max_pause > 100: # Якщо пауза задовга, зменьшуємо її (If the pause is too long, reduce it).
+                        max_pause = 100
 
                 sleep = max_pause-delay
                 sleep_ms(sleep)
                 break
+
+            if elapsed_time > 400:  # Примусовий вихід з циклу через 400 мс (Forced exit from the cycle after 400 ms)
+                print("Force break")
+                print(f"Sleep: {sleep}")
+                ser.write(str("H").encode())
+                sleep_ms(100)
+                break
+
             sleep_ms(1) # Обмежуємо швидкчть вторинного циклу (limit the speed of the secondary cycle)
 
 str_of_numbers = ', '.join(map(str, delays))
