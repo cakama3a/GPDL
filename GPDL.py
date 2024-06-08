@@ -1,4 +1,4 @@
-ver = "2.2.2"
+ver = "2.2.3"
 repeat = 2000
 max_pause = 33
 
@@ -108,6 +108,8 @@ def read_gamepad_button(joystick):
 
 def sleep_ms(milliseconds):
     seconds = milliseconds / 1000.0
+    if seconds < 0:
+        seconds = 0  # Переконуємося, що час сну не є негативним
     time.sleep(seconds)
 
 sleep_ms(2000)
@@ -127,12 +129,10 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dyna
             elapsed_time = (current_time - start) * 1000  # в мілісекундах
             button_state = read_gamepad_button(joystick) # Статус зміни кнопки (Button change status)
             if button_state:  # Якщо кнопка була натиснута (button was pressed)
-                # end = time.perf_counter()  # Використовуйте time.perf_counter() (end timer)
                 end = current_time  # Використовуйте time.perf_counter() (end timer)
                 delay = end - start # timer duration
                 delay = round(delay * 1000, 2)
                 ser.write(str("H").encode()) # Посилаємо сигнал на підняття кнопки (send raise the button signal)
-                #print(delay)
                 if delay >= 0.28 and delay < 150:
                     delays.append(delay)
                     pbar.postfix[0] = "{:05.2f} ms".format(delay)
@@ -145,13 +145,13 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dyna
                     if max_pause > 100: # Якщо пауза задовга, зменьшуємо її (If the pause is too long, reduce it).
                         max_pause = 100
 
-                sleep = max_pause-delay
+                sleep = max_pause - delay
                 sleep_ms(sleep)
                 break
 
             if elapsed_time > 400:  # Примусовий вихід з циклу через 400 мс (Forced exit from the cycle after 400 ms)
-                print("Force break")
-                print(f"Sleep: {sleep}")
+                # print("Force break")
+                # print(f"Sleep: {sleep}")
                 ser.write(str("H").encode())
                 sleep_ms(100)
                 break
