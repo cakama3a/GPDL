@@ -3,6 +3,9 @@
 Gamepadla.spec
 data.txt
 GPDL.spec
+mycert.pfx
+request.csr
+certificate.crt
 GPDLs.py
 private.key
 /dist/GPDL/_internal
