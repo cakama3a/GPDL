@@ -4,4 +4,5 @@ Gamepadla.spec
 data.txt
 GPDL.spec
 GPDLs.py
+private.key
 /dist/GPDL/_internal
