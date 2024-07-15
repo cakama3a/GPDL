@@ -3,12 +3,13 @@
   
 
 [Download GPDL program](https://github.com/cakama3a/GPDL/tree/main/dist) for Windows 10/11  
-[Arduino code](https://github.com/cakama3a/GPDL/blob/main/Arduino.ino) this code should be flashed to the Arduino via [Arduino IDE](https://www.arduino.cc/en/software/)  
+[Arduino code](https://github.com/cakama3a/GPDL/blob/StickTest/Arduino.ino) this code should be flashed to the Arduino via [Arduino IDE](https://www.arduino.cc/en/software/)  
 [Video tutorial](https://www.youtube.com/watch?v=epm2li1hrK8), the Arduino circuit in the video is a bit outdated, but the principle is the same  
 
 **ACTUAL SCHEME**  
-The current GPDL tester scheme for version 2.2.0 and higher.
-![image](https://github.com/cakama3a/GPDL/assets/15096106/b6522ad2-dc46-4308-88c9-598a83ec7b2a)
+The current GPDL tester scheme for version 2.2.5 and higher.
+![image](https://github.com/user-attachments/assets/a04ac64a-1dc5-4e2e-bec9-8d100f0c104b)
+
 
 **ABOUT GPDL**  
 The gamepadla project was created to test the latency of game controllers. It is open-source and allows any enthusiast to measure gamepad latency with the tools at hand in an Arduino-based device.  
