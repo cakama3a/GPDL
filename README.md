@@ -2,7 +2,7 @@
 ![image](https://github.com/cakama3a/GPDL/assets/15096106/f36c402c-d134-44ec-a0d6-25c60e4cc688)
   
 
-[Download GPDL program](https://github.com/cakama3a/GPDL/tree/main/dist) for Windows 10/11  
+[Download GPDL program](https://github.com/cakama3a/GPDL/tree/StickTest/dist) for Windows 10/11  
 [Arduino code](https://github.com/cakama3a/GPDL/blob/StickTest/Arduino.ino) this code should be flashed to the Arduino via [Arduino IDE](https://www.arduino.cc/en/software/)  
 [Video tutorial](https://www.youtube.com/watch?v=epm2li1hrK8), the Arduino circuit in the video is a bit outdated, but the principle is the same  
 
