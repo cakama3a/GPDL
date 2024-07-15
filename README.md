@@ -30,4 +30,3 @@ The author cannot guarantee that the gamepad will not malfunction, so do all tes
 **LINKS:**  
 Donate: https://ko-fi.com/gamepadla  
 A website with a catalog of tested gamepads: https://gamepadla.com  
-[Reddit thread](https://www.reddit.com/r/Gamepadla/comments/1bdqduh/help_with_building_and_configuring_the_arduino/) to help you create and configure your own GPDL tester  
