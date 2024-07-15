@@ -1,19 +1,29 @@
-// Налаштовуємо з'єднання
-int buttonPin = 2; // Провід, що йде до кнопки на геймпаді
+int buttonPin; // Variable to store the pin number for the button
 
 void setup() {
-  pinMode(buttonPin, OUTPUT);
-  Serial.begin(115200); // 115200/9600
+  Serial.begin(115200); // Initialize serial communication at 115200 baud rate
+  while (!Serial) {
+    ; // Wait for the serial port to be ready
+  }
+  
+  // Wait for data from Python to set the buttonPin
+  while (Serial.available() == 0) {
+    ; // Do nothing
+  }
+  
+  buttonPin = Serial.parseInt(); // Receive pin number from Python
+  pinMode(buttonPin, OUTPUT); // Set buttonPin as an output
 }
 
 void loop() {
-  char data = Serial.read();
-  
-  if (data == 'L') {
-    digitalWrite(buttonPin, LOW); // Натиснути кнопку
-  }
-  
-  if (data == 'H') {
-    digitalWrite(buttonPin, HIGH); // Відпустити кнопку
+  if (Serial.available() > 0) {
+    char data = Serial.read(); // Read incoming data from serial
+    
+    // Act based on the received character
+    if (data == 'L') {
+      digitalWrite(buttonPin, LOW); // Press the button
+    } else if (data == 'H') {
+      digitalWrite(buttonPin, HIGH); // Release the button
+    }
   }
 }
