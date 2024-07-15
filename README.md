@@ -25,9 +25,7 @@ Case STL - https://www.thingiverse.com/thing:6283094
 Resistors kit - https://s.click.aliexpress.com/e/_DlKKEy3  
 
 ⚠️ **WARNING:**  
-To ensure the safety of the gamepad, connect the arduino to the gamepad's contacts through 1.5kΩ resistor
-![DSC01762_2](https://github.com/cakama3a/GPDL/assets/15096106/05322302-6f0e-494a-adc2-253bdd8cb30b)
-But even with these precautions, the author cannot guarantee that the gamepad will not malfunction, so do all tests at your own risk!  
+The author cannot guarantee that the gamepad will not malfunction, so do all tests at your own risk!  
 
 **LINKS:**  
 Donate: https://ko-fi.com/gamepadla  
