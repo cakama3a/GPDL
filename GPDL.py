@@ -239,6 +239,11 @@ print(f"Jitter:             {jitter} ms")
 print(f"------------------------------------------")
 print(f" ")
 
+# Перехід на gamepadla.com (go to gamepadla.com)
+answer = input('Open test results on the website (Y/N): ').lower()
+if answer != 'y':
+    exit(1)
+
 # Prepare data for upload to server
 test_key = uuid.uuid4()
 gamepad_name = input("Gamepad name: ")
@@ -270,7 +275,7 @@ data = {
     'max_latency': filteredMax,
     'polling_rate': polling_rate,
     'jitter': jitter,
-    'method': method,
+    'mathod': method,
     'delay_list': str_of_numbers
 }
 
