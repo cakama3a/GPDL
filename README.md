@@ -7,7 +7,7 @@
 [Video tutorial](https://www.youtube.com/watch?v=epm2li1hrK8), the Arduino circuit in the video is a bit outdated, but the principle is the same  
 
 **ACTUAL SCHEME**  
-The current GPDL tester scheme for version 2.2.5 and higher. The diagram shows an Arduino Micro, because I couldn't find a picture of a Nano.
+The current GPDL tester scheme for version 2.2.5 and higher. The diagram shows an Arduino Micro, because I couldn't find a picture of a Nano. View the diagram in a more professional [Chart format](https://wokwi.com/projects/404185236840396801)  
 ![image](https://github.com/user-attachments/assets/a04ac64a-1dc5-4e2e-bec9-8d100f0c104b)  
 
 
