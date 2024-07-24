@@ -1,4 +1,4 @@
-ver = "2.2.5"
+ver = "3.0.0"
 repeat = 2000
 max_pause = 33
 
