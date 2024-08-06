@@ -1,4 +1,4 @@
-ver = "3.0.0"
+ver = "3.0.1"
 repeat = 2000
 max_pause = 33
 
@@ -91,6 +91,10 @@ except IndexError:
     print("\033[31mInvalid gamepad number!\033[0m")
     input("Press Enter to exit...")
     exit(1)
+
+# Add a 3-second delay
+print("\nPreparing to choose test type...")
+time.sleep(3)
 
 # Prompt user to select test type (Button test or Stick test)
 print(" ")
