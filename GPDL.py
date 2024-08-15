@@ -94,13 +94,13 @@ except IndexError:
 
 # Add a 3-second delay
 print("\nPreparing to choose test type...")
+print("\033[33mAttention:\033[0m Do not mix up the modes, otherwise you may damage the gamepad.")
 time.sleep(3)
 
 # Prompt user to select test type (Button test or Stick test)
-print(" ")
-print("Choose test type:")
-print("\033[33mAttention:\033[0m Do not mix up the modes, otherwise you may damage the gamepad.")
-test_type = input("1 for Button test, 2 for Stick test: ")
+print("1 - BUTTON test")
+print("2 - STICK test")
+test_type = input("Enter test type: ")
 
 # Set variables based on selected test type
 if test_type == '1':
