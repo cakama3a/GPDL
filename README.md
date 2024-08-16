@@ -57,7 +57,8 @@ The current GPDL tester scheme for version 2.2.5 and higher. The diagram shows a
 
 
 ## ⚠️WARNING:
-The author cannot guarantee that the gamepad will not malfunction, so do all tests at your own risk!  
+1. The author cannot guarantee that the gamepad will not malfunction, so do all tests at your own risk!  
+2. The joystick testing mode is still experimental and may require additional resistors on the contacts depending on the stick voltage  
 
 **LINKS:**  
 Donate: https://ko-fi.com/gamepadla  
