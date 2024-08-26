@@ -36,6 +36,7 @@ print(f" ")
 print(f"Credits:")
 print(f"My Reddit page: https://reddit.com/user/JohnnyPunch")
 print(f"Support Me: https://ko-fi.com/gamepadla")
+print(f"Guide to using GPDL: https://gamepadla.com/gpdl-tester-guide.pdl")
 print(f"---")
 
 # Get a list of connected joysticks
