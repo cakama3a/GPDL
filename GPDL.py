@@ -1,4 +1,4 @@
-ver = "3.0.1"
+ver = "3.0.2"
 repeat = 2000
 max_pause = 33
 
@@ -92,21 +92,33 @@ except IndexError:
     input("Press Enter to exit...")
     exit(1)
 
-# Add a 3-second delay
-print("\nPreparing to choose test type...")
-print("\033[33mAttention:\033[0m Do not mix up the modes, otherwise you may damage the gamepad.")
-time.sleep(3)
-
 # Prompt user to select test type (Button test or Stick test)
-print("1 - BUTTON test")
-print("2 - STICK test")
-test_type = input("Enter test type: ")
+print("\n\033[1mChoose Test Type:\033[0m")
+print("1 - BUTTON latency test")
+print("2 - STICK latemcy test")
+print("\033[38;5;208m⚠ WARNING: DO NOT MIX UP THE MODES! Incorrect selection may damage your gamepad. ⚠\033[0m")
+print("Wait 3 seconds...")
+time.sleep(3)
+test_type = input("Enter test type (1 or 2): ")
+
+# Set variables based on selected test type
+if test_type == '1':
+    button_pin, down, up, method = 2, "H", "L", "ARD"  # Button test
+elif test_type == '2':
+    button_pin, down, up, method = 8, "H", "L", "STK"  # Stick test
+else:
+    print("\033[31mInvalid test type. Exiting.\033[0m")
+    ser.close()
+    exit(1)
+
+# Send button_pin to Arduino
+ser.write(f"{button_pin}\n".encode())
 
 # Set variables based on selected test type
 if test_type == '1':
     button_pin = 2  # Pin number for Button test
-    down = "L"      # Command to press the button
-    up = "H"        # Command to release the button
+    down = "H"      # Command to press the button
+    up = "L"        # Command to release the button
     method = "ARD"  # Method identifier
 elif test_type == '2':
     button_pin = 8  # Pin number for Stick test
@@ -151,7 +163,7 @@ def read_gamepad_axis(joystick):
     for event in pygame.event.get():
         if event.type == JOYAXISMOTION and event.joy == joystick.get_id():
             stick_axes = [joystick.get_axis(i) for i in [2, 3]]
-            if any(abs(value) >= 0.99 for value in stick_axes):
+            if any(value <= -0.98 for value in stick_axes):
                 return True
     return False
 
