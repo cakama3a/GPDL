@@ -103,7 +103,7 @@ test_type = input("Enter test type (1 or 2): ")
 
 # Set variables based on selected test type
 if test_type == '1':
-    button_pin, down, up, method = 2, "H", "L", "ARD"  # Button test
+    button_pin, down, up, method = 2, "L", "H", "ARD"  # Button test
 elif test_type == '2':
     button_pin, down, up, method = 8, "H", "L", "STK"  # Stick test
 else:
@@ -114,29 +114,10 @@ else:
 # Send button_pin to Arduino
 ser.write(f"{button_pin}\n".encode())
 
-# Set variables based on selected test type
-if test_type == '1':
-    button_pin = 2  # Pin number for Button test
-    down = "H"      # Command to press the button
-    up = "L"        # Command to release the button
-    method = "ARD"  # Method identifier
-elif test_type == '2':
-    button_pin = 8  # Pin number for Stick test
-    down = "H"      # Command to move the stick
-    up = "L"        # Command to stop moving the stick
-    method = "STK"  # Method identifier
-else:
-    print("\033[31mInvalid test type. Exiting.\033[0m")
-    ser.close()
-    exit(1)
-
-# Send button_pin to Arduino
-ser.write(f"{button_pin}\n".encode())
-
 # Inform user and start the test
-print(" ")
-print("The test will begin in 2 seconds...")
-print("\033[33mIf the bar does not progress, try swapping the contacts.\033[0m")
+print("\nThe test will begin in 2 seconds...")
+print("\033[33mIf the bar does not progress, the program will automatically try to swap the test mode.\033[0m")
+time.sleep(2)
 
 counter = 0
 delays = []
