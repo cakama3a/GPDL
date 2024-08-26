@@ -114,6 +114,22 @@ else:
 # Send button_pin to Arduino
 ser.write(f"{button_pin}\n".encode())
 
+# Prompt user for Reverse mode
+print("\n\033[1mReverse Mode:\033[0m")
+print("This mode reverses the polling type (LOW becomes HIGH, and HIGH becomes LOW).")
+print("\033[33mOnly activate this mode if the standard mode doesn't work.\033[0m")
+print("\033[33mIn most cases, you should NOT use Reverse mode.\033[0m")
+reverse_mode = input("Do you want to activate Reverse mode? (y/N): ").lower() == 'y'
+
+if reverse_mode:
+    down, up = up, down  # Swap the values of down and up
+    print("\033[38;5;208mReverse mode activated. Use with caution.\033[0m")
+else:
+    print("Standard mode selected.")
+
+# Send button_pin to Arduino
+ser.write(f"{button_pin}\n".encode())
+
 # Inform user and start the test
 print("\nThe test will begin in 2 seconds...")
 print("\033[33mIf the bar does not progress, the program will automatically try to swap the test mode.\033[0m")
