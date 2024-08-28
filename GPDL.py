@@ -1,4 +1,4 @@
-ver = "3.0.2"
+ver = "3.0.3"
 repeat = 2000
 max_pause = 33
 
@@ -161,7 +161,8 @@ def read_gamepad_axis(joystick):
     for event in pygame.event.get():
         if event.type == JOYAXISMOTION and event.joy == joystick.get_id():
             stick_axes = [joystick.get_axis(i) for i in [2, 3]]
-            if any(value <= -0.98 for value in stick_axes):
+            if any(abs(value) >= 0.99 for value in stick_axes):
+            #if any(value <= -0.98 for value in stick_axes):
                 return True
     return False
 
