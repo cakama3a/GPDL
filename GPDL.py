@@ -1,6 +1,7 @@
 ver = "3.0.4"
 repeat = 2000
 max_pause = 33
+stick_treshold = 0.99
 
 # Import necessary libraries
 from colorama import Fore, Back, Style
@@ -163,7 +164,8 @@ def read_gamepad_axis(joystick):
     for event in pygame.event.get():
         if event.type == JOYAXISMOTION and event.joy == joystick.get_id():
             stick_axes = [joystick.get_axis(i) for i in [2, 3]]
-            if any(abs(value) >= 0.99 for value in stick_axes):
+            if any(stick_treshold <= value <= 1 for value in stick_axes) or any(-1 <= value <= -stick_treshold for value in stick_axes):
+            #if any(abs(value) >= 0.99 for value in stick_axes):
             #if any(value <= -0.98 for value in stick_axes):
                 return True
     return False
@@ -197,11 +199,17 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dyna
                 delay = end - start
                 delay = round(delay * 1000, 2)
                 ser.write(str(up).encode())
-                
+
+                # Get current stick position for detection
+                stick_position = joystick.get_axis(0)  # Assuming axis 0 is used; adjust based on your needs
+                stick_position_rounded = round(stick_position, 2)
+
                 # Record delays within valid range
                 if delay >= 0.28 and delay < 150:
                     delays.append(delay)
                     pbar.postfix[0] = "{:05.2f} ms".format(delay)
+                    # Update progress bar with both delay and stick position
+                    # pbar.postfix[0] = "{:05.2f} ms [{:05.2f}]".format(delay, stick_position_rounded)
                     pbar.update(1)
                     counter += 1
 
