@@ -1,7 +1,7 @@
-ver = "3.0.5"  # Updated version
+ver = "3.0.6"  # Updated version
 repeat = 2000
 max_pause = 33
-stick_treshold = 0.99
+stick_treshold = 0.99  # Threshold for detecting valid axis values
 
 # Import necessary libraries
 from colorama import Fore, Back, Style
@@ -125,6 +125,10 @@ elif test_type == '2':
     else:
         print("\033[31mInvalid stick choice! Exiting.\033[0m")
         exit(1)
+
+    # Initialize tracking for invalid test (positive and negative X axis detection)
+    positive_x_detected = False
+    negative_x_detected = False
 else:
     print("\033[31mInvalid test type. Exiting.\033[0m")
     ser.close()
@@ -159,6 +163,7 @@ time.sleep(2)
 counter = 0
 delays = []
 prev_button_state = False
+invalid_test = False  # Track if the test is invalid
 
 # Function to filter outliers from an array
 def filter_outliers(array):
@@ -225,6 +230,17 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dyna
                     stick_position_x_rounded = round(stick_position_x, 2)
                     stick_position_y_rounded = round(stick_position_y, 2)
 
+                    # Check if both positive and negative X detected using threshold
+                    if stick_position_x_rounded >= stick_treshold:
+                        positive_x_detected = True
+                    elif stick_position_x_rounded <= -stick_treshold:
+                        negative_x_detected = True
+
+                    # If both positive and negative X detected, mark test as invalid
+                    if positive_x_detected and negative_x_detected:
+                        invalid_test = True
+                        pbar.bar_format = '{l_bar}{bar} ' + Fore.RED + '| {postfix[0]}' + Fore.RESET  # Change progress bar color to red
+
                 # Record delays within valid range
                 if delay >= 0.28 and delay < 150:
                     delays.append(delay)
@@ -288,6 +304,12 @@ print(f" ")
 print(f"Jitter:             {jitter} ms")
 print(f"------------------------------------------")
 print(f" ")
+
+# Check if test is invalid due to both positive and negative X detections
+if invalid_test:
+    print(Fore.RED + "\nWarning: The test detected input on both positive and negative X axes, which indicates improper wiring. The test is not valid." + Fore.RESET)
+    print("\033[31mTest results cannot be submitted to the server.\033[0m")
+    exit(1)  # Prevent submission of invalid test
 
 # Перехід на gamepadla.com (go to gamepadla.com)
 answer = input('Open test results on the website (Y/N): ').lower()
