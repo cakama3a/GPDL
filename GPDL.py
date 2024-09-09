@@ -1,4 +1,4 @@
-ver = "3.0.4"
+ver = "3.0.5"  # Updated version
 repeat = 2000
 max_pause = 33
 stick_treshold = 0.99
@@ -209,20 +209,32 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dyna
             current_time = time.perf_counter()
             elapsed_time = (current_time - start) * 1000
             button_state = read_gamepad_button(joystick) if test_type == '1' else read_gamepad_axis(joystick)
+            
             if button_state:
                 end = current_time
                 delay = end - start
                 delay = round(delay * 1000, 2)
                 ser.write(str(up).encode())
 
-                # Get current stick position for detection
-                stick_position = joystick.get_axis(stick_axes_indices[0])  # Using chosen axis for stick
-                stick_position_rounded = round(stick_position, 2)
+                if test_type == '2':  # Only for stick test
+                    # Get current stick position for detection
+                    stick_position_x = joystick.get_axis(stick_axes_indices[0])  # X axis
+                    stick_position_y = joystick.get_axis(stick_axes_indices[1])  # Y axis
+
+                    # Round the values for display
+                    stick_position_x_rounded = round(stick_position_x, 2)
+                    stick_position_y_rounded = round(stick_position_y, 2)
 
                 # Record delays within valid range
                 if delay >= 0.28 and delay < 150:
                     delays.append(delay)
-                    pbar.postfix[0] = "{:05.2f} ms".format(delay)
+                    
+                    # Update progress bar for button or stick test
+                    if test_type == '1':  # For button test, no need to show coordinates
+                        pbar.postfix[0] = "{:05.2f} ms".format(delay)
+                    elif test_type == '2':  # For stick test, show X and Y coordinates
+                        pbar.postfix[0] = "{:05.2f} ms | X: {:05.2f}, Y: {:05.2f}".format(delay, stick_position_x_rounded, stick_position_y_rounded)
+
                     pbar.update(1)
                     counter += 1
 
