@@ -1,4 +1,4 @@
-ver = "3.0.3"
+ver = "3.0.4"
 repeat = 2000
 max_pause = 33
 
@@ -96,7 +96,7 @@ except IndexError:
 # Prompt user to select test type (Button test or Stick test)
 print("\n\033[1mChoose Test Type:\033[0m")
 print("1 - BUTTON latency test")
-print("2 - STICK latemcy test")
+print("2 - STICK latency test")
 print("\033[38;5;208m⚠ WARNING: DO NOT MIX UP THE MODES! Incorrect selection may damage your gamepad. ⚠\033[0m")
 print("Wait 3 seconds...")
 time.sleep(3)
@@ -116,6 +116,7 @@ else:
 ser.write(f"{button_pin}\n".encode())
 
 # Prompt user for Reverse mode
+reverse = 0
 print("\n\033[1mReverse Mode:\033[0m")
 print("This mode reverses the polling type (LOW becomes HIGH, and HIGH becomes LOW).")
 print("\033[33mOnly activate this mode if the standard mode doesn't work.\033[0m")
@@ -123,6 +124,7 @@ print("\033[33mIn most cases, you should NOT use Reverse mode.\033[0m")
 reverse_mode = input("Do you want to activate Reverse mode? (y/N): ").lower() == 'y'
 
 if reverse_mode:
+    reverse = 1
     down, up = up, down  # Swap the values of down and up
     print("\033[38;5;208mReverse mode activated. Use with caution.\033[0m")
 else:
@@ -291,6 +293,7 @@ data = {
     'polling_rate': polling_rate,
     'jitter': jitter,
     'mathod': method,
+    'reverse': reverse,
     'delay_list': str_of_numbers
 }
 
