@@ -108,6 +108,23 @@ if test_type == '1':
     button_pin, down, up, method = 2, "L", "H", "ARD"  # Button test
 elif test_type == '2':
     button_pin, down, up, method = 8, "H", "L", "STK"  # Stick test
+    
+    # Choose which stick to test (left or right)
+    print("\n\033[1mChoose Stick to Test:\033[0m")
+    print("1 - Left Stick")
+    print("2 - Right Stick")
+    stick_choice = input("Enter stick number (1 or 2): ")
+
+    # Assign axes based on stick choice
+    if stick_choice == '1':
+        stick_axes_indices = [0, 1]  # Left stick uses axes 0 and 1
+        print("Testing Left Stick")
+    elif stick_choice == '2':
+        stick_axes_indices = [2, 3]  # Right stick uses axes 2 and 3
+        print("Testing Right Stick")
+    else:
+        print("\033[31mInvalid stick choice! Exiting.\033[0m")
+        exit(1)
 else:
     print("\033[31mInvalid test type. Exiting.\033[0m")
     ser.close()
@@ -163,10 +180,8 @@ def read_gamepad_button(joystick):
 def read_gamepad_axis(joystick):
     for event in pygame.event.get():
         if event.type == JOYAXISMOTION and event.joy == joystick.get_id():
-            stick_axes = [joystick.get_axis(i) for i in [2, 3]]
+            stick_axes = [joystick.get_axis(i) for i in stick_axes_indices]
             if any(stick_treshold <= value <= 1 for value in stick_axes) or any(-1 <= value <= -stick_treshold for value in stick_axes):
-            #if any(abs(value) >= 0.99 for value in stick_axes):
-            #if any(value <= -0.98 for value in stick_axes):
                 return True
     return False
 
@@ -201,15 +216,13 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dyna
                 ser.write(str(up).encode())
 
                 # Get current stick position for detection
-                stick_position = joystick.get_axis(0)  # Assuming axis 0 is used; adjust based on your needs
+                stick_position = joystick.get_axis(stick_axes_indices[0])  # Using chosen axis for stick
                 stick_position_rounded = round(stick_position, 2)
 
                 # Record delays within valid range
                 if delay >= 0.28 and delay < 150:
                     delays.append(delay)
                     pbar.postfix[0] = "{:05.2f} ms".format(delay)
-                    # Update progress bar with both delay and stick position
-                    # pbar.postfix[0] = "{:05.2f} ms [{:05.2f}]".format(delay, stick_position_rounded)
                     pbar.update(1)
                     counter += 1
 
