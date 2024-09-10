@@ -1,4 +1,4 @@
-// 3.0.1
+// 4.0.0
 int buttonPin; // Variable to store the pin number for the button
 
 void setup() {
@@ -6,6 +6,10 @@ void setup() {
   while (!Serial) {
     ; // Wait for the serial port to be ready
   }
+
+  // Turn off ports 4 and 6
+  pinMode(4, INPUT); // Disable pin 4
+  pinMode(6, INPUT); // Disable pin 6
   
   // Wait for data from Python to set the buttonPin
   while (Serial.available() == 0) {

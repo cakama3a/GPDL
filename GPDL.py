@@ -105,9 +105,10 @@ test_type = input("Enter test type (1 or 2): ")
 
 # Set variables based on selected test type
 if test_type == '1':
-    button_pin, down, up, method = 2, "L", "H", "ARD"  # Button test
+    button_pin, down, up, method = 9, "L", "H", "ARD"  # Button test
 elif test_type == '2':
-    button_pin, down, up, method = 8, "H", "L", "STK"  # Stick test
+    #button_pin, down, up, method = 5, "H", "L", "STK"  # Stick test
+    button_pin, down, up, method = 5, "L", "H", "STK"  # Stick test
     
     # Choose which stick to test (left or right)
     print("\n\033[1mChoose Stick to Test:\033[0m")
