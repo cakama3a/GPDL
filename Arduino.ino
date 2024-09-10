@@ -26,8 +26,10 @@ void loop() {
     
     // Act based on the received character
     if (data == 'L') {
+      pinMode(buttonPin, OUTPUT); // Enable pin
       digitalWrite(buttonPin, LOW); // Press the button
     } else if (data == 'H') {
+      pinMode(buttonPin, INPUT); // Disable the pin
       digitalWrite(buttonPin, HIGH); // Release the button
     }
   }
