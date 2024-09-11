@@ -135,9 +135,6 @@ else:
     ser.close()
     exit(1)
 
-# Send button_pin to Arduino
-ser.write(f"{button_pin}\n".encode())
-
 # Prompt user for Reverse mode
 reverse = 0
 # print("\n\033[1mReverse Mode:\033[0m")
