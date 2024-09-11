@@ -1,4 +1,4 @@
-// 3.0.1
+// 3.0.8
 int buttonPin; // Variable to store the pin number for the button
 
 void setup() {
@@ -7,6 +7,10 @@ void setup() {
     ; // Wait for the serial port to be ready
   }
   
+  pinMode(5, INPUT); // Disable pin 5, because it only serves as a connection contact
+  pinMode(2, INPUT);
+  pinMode(8, INPUT);
+
   // Wait for data from Python to set the buttonPin
   while (Serial.available() == 0) {
     ; // Do nothing
@@ -22,9 +26,11 @@ void loop() {
     
     // Act based on the received character
     if (data == 'L') {
+      pinMode(buttonPin, OUTPUT); // Enable pin
       digitalWrite(buttonPin, LOW); // Press the button
     } else if (data == 'H') {
-      digitalWrite(buttonPin, HIGH); // Release the button
+      pinMode(buttonPin, INPUT); // Disable pin
+      //digitalWrite(buttonPin, HIGH); // Release the button
     }
   }
 }
