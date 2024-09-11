@@ -1,4 +1,4 @@
-ver = "3.0.6"  # Updated version
+ver = "4.0.0"  # Updated version
 repeat = 2000
 max_pause = 33
 stick_treshold = 0.99  # Threshold for detecting valid axis values
