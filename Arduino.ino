@@ -8,8 +8,6 @@ void setup() {
   }
   
   pinMode(5, INPUT); // Disable pin 5, because it only serves as a connection contact
-  pinMode(2, INPUT);
-  pinMode(8, INPUT);
 
   // Wait for data from Python to set the buttonPin
   while (Serial.available() == 0) {

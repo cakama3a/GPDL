@@ -1,4 +1,4 @@
-ver = "3.0.7"  # Updated version
+ver = "3.0.6"  # Updated version
 repeat = 2000
 max_pause = 33
 stick_treshold = 0.99  # Threshold for detecting valid axis values
@@ -107,8 +107,7 @@ test_type = input("Enter test type (1 or 2): ")
 if test_type == '1':
     button_pin, down, up, method = 2, "L", "H", "ARD"  # Button test
 elif test_type == '2':
-    #button_pin, down, up, method = 8, "H", "L", "STK"  # Stick test
-    button_pin, down, up, method = 8, "L", "H", "STK"  # Stick test
+    button_pin, down, up, method = 8, "H", "L", "STK"  # Stick test
     
     # Choose which stick to test (left or right)
     print("\n\033[1mChoose Stick to Test:\033[0m")
@@ -140,18 +139,18 @@ ser.write(f"{button_pin}\n".encode())
 
 # Prompt user for Reverse mode
 reverse = 0
-# print("\n\033[1mReverse Mode:\033[0m")
-# print("This mode reverses the polling type (LOW becomes HIGH, and HIGH becomes LOW).")
-# print("\033[33mOnly activate this mode if the standard mode doesn't work.\033[0m")
-# print("\033[33mIn most cases, you should NOT use Reverse mode.\033[0m")
-# reverse_mode = input("Do you want to activate Reverse mode? (y/N): ").lower() == 'y'
+print("\n\033[1mReverse Mode:\033[0m")
+print("This mode reverses the polling type (LOW becomes HIGH, and HIGH becomes LOW).")
+print("\033[33mOnly activate this mode if the standard mode doesn't work.\033[0m")
+print("\033[33mIn most cases, you should NOT use Reverse mode.\033[0m")
+reverse_mode = input("Do you want to activate Reverse mode? (y/N): ").lower() == 'y'
 
-# if reverse_mode:
-#     reverse = 1
-#     down, up = up, down  # Swap the values of down and up
-#     print("\033[38;5;208mReverse mode activated. Use with caution.\033[0m")
-# else:
-#     print("Standard mode selected.")
+if reverse_mode:
+    reverse = 1
+    down, up = up, down  # Swap the values of down and up
+    print("\033[38;5;208mReverse mode activated. Use with caution.\033[0m")
+else:
+    print("Standard mode selected.")
 
 # Send button_pin to Arduino
 ser.write(f"{button_pin}\n".encode())
