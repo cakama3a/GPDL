@@ -49,7 +49,7 @@ The current GPDL tester scheme for version 2.2.5 and higher. The diagram shows a
 
 ## Required software
 [Download GPDL program](https://github.com/cakama3a/GPDL/tree/StickTest/dist) for Windows 10/11  
-[Arduino code](https://github.com/cakama3a/GPDL/blob/StickTest/Arduino.ino) this code should be flashed to the Arduino via [Arduino IDE](https://www.arduino.cc/en/software/)  
+[Arduino code](https://github.com/cakama3a/GPDL/blob/StickTest/Arduino.ino) this code should be [flashed](https://gamepadla.com/updating-gpdl-firmware.pdl) to the Arduino via [Arduino IDE](https://www.arduino.cc/en/software/)  
 
 ## Tutorial
 **Currently outdated (but still useful)**  
