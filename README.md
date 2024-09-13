@@ -46,6 +46,9 @@ After the test is completed, the results will be displayed on the gamepadla.com 
 ## Actual scheme
 The current GPDL tester scheme for version 2.2.5 and higher. The diagram shows an Arduino Micro, because I couldn't find a picture of a Nano. View the diagram in a more professional [Chart format](https://wokwi.com/projects/404185236840396801)  
 ![image](https://github.com/user-attachments/assets/a04ac64a-1dc5-4e2e-bec9-8d100f0c104b)  
+What it will look like in real life  
+![20240913-DSC02376-2-min](https://github.com/user-attachments/assets/e2e684c4-c70a-4593-8277-a309fddfc6f2)  
+
 
 ## Required software
 [Download GPDL program](https://github.com/cakama3a/GPDL/tree/StickTest/dist) for Windows 10/11  
