@@ -1,4 +1,4 @@
-ver = "3.0.82"  # Updated version
+ver = "3.0.83"  # Updated version
 repeat = 2000
 max_pause = 33
 stick_treshold = 0.99  # Threshold for detecting valid axis values
@@ -113,7 +113,12 @@ elif test_type == '2':
     button_pin, down, up, method = 8, "L", "H", "STK"  # Stick test
 elif test_type == '3':
     button_pin, down, up, method = 5, "L", "H", "STK"  # Stick test (WO Resistor mode)
-    
+else:
+    print("\033[31mInvalid test type. Exiting.\033[0m")
+    ser.close()
+    exit(1)
+
+if test_type in ['2', '3']:
     # Choose which stick to test (left or right)
     print("\n\033[1mChoose Stick to Test:\033[0m")
     print("1 - Left Stick")
@@ -134,10 +139,6 @@ elif test_type == '3':
     # Initialize tracking for invalid test (positive and negative X axis detection)
     positive_x_detected = False
     negative_x_detected = False
-else:
-    print("\033[31mInvalid test type. Exiting.\033[0m")
-    ser.close()
-    exit(1)
 
 # Prompt user for Reverse mode
 reverse = 0
