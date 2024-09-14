@@ -1,4 +1,4 @@
-ver = "3.0.81"  # Updated version
+ver = "3.0.82"  # Updated version
 repeat = 2000
 max_pause = 33
 stick_treshold = 0.99  # Threshold for detecting valid axis values
@@ -223,7 +223,7 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dyna
                 delay = round(delay * 1000, 2)
                 ser.write(str(up).encode())
 
-                if test_type == '2':  # Only for stick test
+                if test_type in ['2', '3']:  # Only for stick test
                     # Get current stick position for detection
                     stick_position_x = joystick.get_axis(stick_axes_indices[0])  # X axis
                     stick_position_y = joystick.get_axis(stick_axes_indices[1])  # Y axis
@@ -250,7 +250,7 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dyna
                     # Update progress bar for button or stick test
                     if test_type == '1':  # For button test, no need to show coordinates
                         pbar.postfix[0] = "{:05.2f} ms".format(delay)
-                    elif test_type == '2':  # For stick test, show X and Y coordinates
+                    elif test_type in ['2', '3']:  # For stick test, show X and Y coordinates
                         pbar.postfix[0] = "{:05.2f} ms | X: {:05.2f}, Y: {:05.2f}".format(delay, stick_position_x_rounded, stick_position_y_rounded)
 
                     pbar.update(1)
