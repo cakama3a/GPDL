@@ -1,4 +1,4 @@
-ver = "3.0.8"  # Updated version
+ver = "3.0.81"  # Updated version
 repeat = 2000
 max_pause = 33
 stick_treshold = 0.99  # Threshold for detecting valid axis values
@@ -99,10 +99,11 @@ except IndexError:
 print("\n\033[1mChoose Test Type:\033[0m")
 print("1 - BUTTON latency test")
 print("2 - STICK latency test")
+print("3 - STICK W/O Resistor (If 2 does not work)")
 print("\033[38;5;208m⚠ WARNING: DO NOT MIX UP THE MODES! Incorrect selection may damage your gamepad. ⚠\033[0m")
 print("Wait 3 seconds...")
 time.sleep(3)
-test_type = input("Enter test type (1 or 2): ")
+test_type = input("Enter test type (1/2/3): ")
 
 # Set variables based on selected test type
 if test_type == '1':
@@ -110,6 +111,8 @@ if test_type == '1':
 elif test_type == '2':
     #button_pin, down, up, method = 8, "H", "L", "STK"  # Stick test
     button_pin, down, up, method = 8, "L", "H", "STK"  # Stick test
+elif test_type == '3':
+    button_pin, down, up, method = 5, "L", "H", "STK"  # Stick test (WO Resistor mode)
     
     # Choose which stick to test (left or right)
     print("\n\033[1mChoose Stick to Test:\033[0m")
