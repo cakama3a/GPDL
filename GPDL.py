@@ -59,16 +59,17 @@ for i, port in enumerate(available_ports):
     port_name = list_ports.comports()[i].description
     print(f"{i + 1} - {port_name}")
 
-print("\033[33m* Notice: You must have a GPDL device to test!\033[0m")
-
-# Prompt user to enter COM port number for GPDL
-port_num = int(input("Enter the COM port number for GPDL: ")) - 1
-try:
-    port = available_ports[port_num]
-except IndexError:
-    print("\033[31mInvalid COM port number. Exiting.\033[0m")
-    time.sleep(5)
-    exit()
+if len(available_ports) == 1:
+    port = available_ports[0]
+    print(f"\033[32mOnly one COM port found. Automatically selected: {port}\033[0m")
+else:
+    port_num = int(input("Enter the COM port number for GPDL: ")) - 1
+    try:
+        port = available_ports[port_num]
+    except IndexError:
+        print("\033[31mInvalid COM port number. Exiting.\033[0m")
+        time.sleep(5)
+        exit()
 
 # Connect to the specified COM port
 try:
@@ -81,19 +82,22 @@ except serial.SerialException as e:
 # List available gamepads
 print(" ")
 print("Available gamepads:")
-print("\033[33mAttention:\033[0m If your gamepad is connected in wired mode, only one (Red) tester wire should be connected!")
 for i, joystick in enumerate(joysticks):
     print(f"{i + 1} - {joystick.get_name()}")
 
-# Prompt user to select gamepad number
-try:
-    joystick_num = int(input("Enter the gamepad number: ")) - 1
-    joystick = joysticks[joystick_num]
+if len(joysticks) == 1:
+    joystick = joysticks[0]
     joystick.init()
-except IndexError:
-    print("\033[31mInvalid gamepad number!\033[0m")
-    input("Press Enter to exit...")
-    exit(1)
+    print(f"\033[32mOnly one gamepad found. Automatically selected: {joystick.get_name()}\033[0m")
+else:
+    joystick_num = int(input("Enter the gamepad number: ")) - 1
+    try:
+        joystick = joysticks[joystick_num]
+        joystick.init()
+    except IndexError:
+        print("\033[31mInvalid gamepad number!\033[0m")
+        input("Press Enter to exit...")
+        exit(1)
 
 # Prompt user to select test type (Button test or Stick test)
 print("\n\033[1mChoose Test Type:\033[0m")
