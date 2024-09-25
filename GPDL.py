@@ -113,6 +113,13 @@ if test_type == '1':
     button_pin, down, up, method = 2, "L", "H", "ARD"  # Button test
 elif test_type == '2':
     button_pin, down, up, method = 5, "L", "H", "STK"  # Stick test (WO Resistor mode)
+    
+    # Prompt user to input stick threshold
+    try:
+        stick_treshold = float(input("Enter stick threshold value (default is 0.99): "))
+    except ValueError:
+        print("Invalid input. Using default threshold of 0.99.")
+        stick_treshold = 0.99
 else:
     print("\033[31mInvalid test type. Exiting.\033[0m")
     ser.close()
