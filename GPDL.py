@@ -153,7 +153,7 @@ ser.write(f"{button_pin}\n".encode())
 
 # Inform user and start the test
 print("\nThe test will begin in 2 seconds...")
-print("\033[33mIf the bar does not progress, the program will automatically try to swap the test mode.\033[0m")
+print("\033[33mIf the bar does not progress, try swapping the contacts.\033[0m")
 time.sleep(2)
 
 counter = 0
