@@ -115,6 +115,7 @@ elif test_type == '2':
     button_pin, down, up, method = 5, "L", "H", "STK"  # Stick test (WO Resistor mode)
     
     # Prompt user to input stick threshold
+    print()
     try:
         stick_treshold = float(input("Enter stick threshold value (default is 0.99): "))
     except ValueError:
@@ -146,21 +147,6 @@ if test_type in ['2', '3']:
     # Initialize tracking for invalid test (positive and negative X axis detection)
     positive_x_detected = False
     negative_x_detected = False
-
-# Prompt user for Reverse mode
-reverse = 0
-# print("\n\033[1mReverse Mode:\033[0m")
-# print("This mode reverses the polling type (LOW becomes HIGH, and HIGH becomes LOW).")
-# print("\033[33mOnly activate this mode if the standard mode doesn't work.\033[0m")
-# print("\033[33mIn most cases, you should NOT use Reverse mode.\033[0m")
-# reverse_mode = input("Do you want to activate Reverse mode? (y/N): ").lower() == 'y'
-
-# if reverse_mode:
-#     reverse = 1
-#     down, up = up, down  # Swap the values of down and up
-#     print("\033[38;5;208mReverse mode activated. Use with caution.\033[0m")
-# else:
-#     print("Standard mode selected.")
 
 # Send button_pin to Arduino
 ser.write(f"{button_pin}\n".encode())
@@ -306,6 +292,9 @@ print(f"\033[1mTest results:\033[0m")
 print(f"------------------------------------------")
 print(f"OS:                 {os_name} {os_version}")
 print(f"Gamepad mode:       {joystick.get_name()}")
+print(f"Test type:          {'Button' if test_type == '1' else 'Stick'}")
+if test_type == '2':
+    print(f"Stick threshold:    {stick_treshold}")
 print(f" ")
 print(f"Minimal latency:    {filteredMin} ms")
 print(f"Average latency:    {filteredAverage_rounded} ms")
@@ -361,8 +350,9 @@ data = {
     'polling_rate': polling_rate,
     'jitter': jitter,
     'mathod': method,
-    'reverse': reverse,
-    'delay_list': str_of_numbers
+    'delay_list': str_of_numbers,
+    'stick_threshold': stick_treshold
+
 }
 
 # Send data to server and open results page
