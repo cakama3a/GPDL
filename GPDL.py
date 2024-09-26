@@ -309,9 +309,8 @@ if invalid_test:
     print(Fore.RED + "\nWarning: The test detected input on both positive and negative X axes, which indicates improper wiring. The test is not valid." + Fore.RESET)
     print("\033[31mTest results cannot be submitted to the server.\033[0m")
     # Prompt user to quit
-    answer = input('Quit (Y/N): ').lower()
-    if answer == 'y':
-        exit(1)
+    input("Press Enter to exit...")
+    exit(1)
 
 # Перехід на gamepadla.com (go to gamepadla.com)
 answer = input('Open test results on the website (Y/N): ').lower()
@@ -368,6 +367,5 @@ with open('test_data.txt', 'w') as outfile:
     json.dump(data, outfile, indent=4)
 
 # Prompt user to quit
-answer = input('Quit (Y/N): ').lower()
-if answer == 'y':
-    exit(1)
+input("Press Enter to exit...")
+exit(1)
