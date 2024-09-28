@@ -10,3 +10,4 @@ GPDLs.py
 private.key
 /dist/GPDL/_internal
 test_data.txt
+test_data.json

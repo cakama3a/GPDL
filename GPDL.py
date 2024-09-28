@@ -1,8 +1,3 @@
-ver = "3.0.9"  # Updated version
-repeat = 2000
-max_pause = 33
-stick_treshold = 0.99  # Threshold for detecting valid axis values
-
 # Import necessary libraries
 from colorama import Fore, Back, Style
 import serial
@@ -20,6 +15,12 @@ from pygame.locals import *
 
 # Initialize pygame
 pygame.init()
+
+# Set constants
+ver = "3.1.1"  # Updated version
+repeat = 200  # Number of tests per threshold
+max_pause = 33
+thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
 # Print welcome messages
 print(f" ")
@@ -114,19 +115,6 @@ if test_type == '1':
 elif test_type == '2':
     button_pin, down, up, method = 5, "L", "H", "STK"  # Stick test (WO Resistor mode)
     
-    # Prompt user to input stick threshold
-    print()
-    try:
-        stick_treshold = float(input("Enter stick threshold value (default is 0.99): "))
-    except ValueError:
-        print("Invalid input. Using default threshold of 0.99.")
-        stick_treshold = 0.99
-else:
-    print("\033[31mInvalid test type. Exiting.\033[0m")
-    ser.close()
-    exit(1)
-
-if test_type in ['2', '3']:
     # Choose which stick to test (left or right)
     print("\n\033[1mChoose Stick to Test:\033[0m")
     print("1 - Left Stick")
@@ -143,23 +131,13 @@ if test_type in ['2', '3']:
     else:
         print("\033[31mInvalid stick choice! Exiting.\033[0m")
         exit(1)
-
-    # Initialize tracking for invalid test (positive and negative X axis detection)
-    positive_x_detected = False
-    negative_x_detected = False
+else:
+    print("\033[31mInvalid test type. Exiting.\033[0m")
+    ser.close()
+    exit(1)
 
 # Send button_pin to Arduino
 ser.write(f"{button_pin}\n".encode())
-
-# Inform user and start the test
-print("\nThe test will begin in 2 seconds...")
-print("\033[33mIf the bar does not progress, try swapping the contacts.\033[0m")
-time.sleep(2)
-
-counter = 0
-delays = []
-prev_button_state = False
-invalid_test = False  # Track if the test is invalid
 
 # Function to filter outliers from an array
 def filter_outliers(array):
@@ -178,11 +156,11 @@ def read_gamepad_button(joystick):
     return False
 
 # Function to read gamepad stick axis state
-def read_gamepad_axis(joystick):
+def read_gamepad_axis(joystick, threshold):
     for event in pygame.event.get():
         if event.type == JOYAXISMOTION and event.joy == joystick.get_id():
             stick_axes = [joystick.get_axis(i) for i in stick_axes_indices]
-            if any(stick_treshold <= value <= 1 for value in stick_axes) or any(-1 <= value <= -stick_treshold for value in stick_axes):
+            if any(threshold <= value <= 1 for value in stick_axes) or any(-1 <= value <= -threshold for value in stick_axes):
                 return True
     return False
 
@@ -193,144 +171,160 @@ def sleep_ms(milliseconds):
         seconds = 0
     time.sleep(seconds)
 
-# Initial button press and release for calibration
-sleep_ms(2000)
-ser.write(str(down).encode())
-sleep_ms(100)
-ser.write(str(up).encode())
-sleep_ms(1000)
+# Inform user and start the test
+print("\nThe test will begin in 2 seconds...")
+print("\033[33mIf the bar does not progress, try swapping the contacts.\033[0m")
+time.sleep(2)
 
-# Initialize progress bar for the test
-with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dynamic_ncols=False, postfix=[0]) as pbar:
-    while counter < repeat:
-        ser.write(str(down).encode())
-        
-        start = time.perf_counter()
-        while True:
-            current_time = time.perf_counter()
-            elapsed_time = (current_time - start) * 1000
-            button_state = read_gamepad_button(joystick) if test_type == '1' else read_gamepad_axis(joystick)
+# Initialize variables for storing results
+all_delays = {}
+all_stats = {}
+
+# Main test loop
+if test_type == '1':  # Button test
+    delays = []
+    counter = 0
+    
+    with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dynamic_ncols=False, postfix=[0]) as pbar:
+        while counter < repeat:
+            ser.write(str(down).encode())
             
-            if button_state:
-                end = current_time
-                delay = end - start
-                delay = round(delay * 1000, 2)
-                ser.write(str(up).encode())
+            start = time.perf_counter()
+            while True:
+                current_time = time.perf_counter()
+                elapsed_time = (current_time - start) * 1000
+                button_state = read_gamepad_button(joystick)
+                
+                if button_state:
+                    end = current_time
+                    delay = round((end - start) * 1000, 2)
+                    ser.write(str(up).encode())
 
-                if test_type in ['2', '3']:  # Only for stick test
-                    # Get current stick position for detection
-                    stick_position_x = joystick.get_axis(stick_axes_indices[0])  # X axis
-                    stick_position_y = joystick.get_axis(stick_axes_indices[1])  # Y axis
-
-                    # Round the values for display
-                    stick_position_x_rounded = round(stick_position_x, 2)
-                    stick_position_y_rounded = round(stick_position_y, 2)
-
-                    # Check if both positive and negative X detected using threshold
-                    if stick_position_x_rounded >= stick_treshold:
-                        positive_x_detected = True
-                    elif stick_position_x_rounded <= -stick_treshold:
-                        negative_x_detected = True
-
-                    # If both positive and negative X detected, mark test as invalid
-                    if positive_x_detected and negative_x_detected:
-                        invalid_test = True
-                        pbar.bar_format = '{l_bar}{bar} ' + Fore.RED + '| {postfix[0]}' + Fore.RESET  # Change progress bar color to red
-
-                # Record delays within valid range
-                if delay >= 0.28 and delay < 150:
-                    delays.append(delay)
-                    
-                    # Update progress bar for button or stick test
-                    if test_type == '1':  # For button test, no need to show coordinates
+                    if 0.28 <= delay < 150:
+                        delays.append(delay)
                         pbar.postfix[0] = "{:05.2f} ms".format(delay)
-                    elif test_type in ['2', '3']:  # For stick test, show X and Y coordinates
-                        pbar.postfix[0] = "{:05.2f} ms | X: {:05.2f}, Y: {:05.2f}".format(delay, stick_position_x_rounded, stick_position_y_rounded)
+                        pbar.update(1)
+                        counter += 1
 
-                    pbar.update(1)
-                    counter += 1
+                    max_pause = min(round(delay + 33), 100)
+                    sleep_ms(max_pause - delay)
+                    break
 
-                # Adjust maximum pause time dynamically
-                if (delay + 16 > max_pause):
-                    max_pause = round(delay + 33)
-                    if max_pause > 100:
-                        max_pause = 100
+                if elapsed_time > 400:
+                    ser.write(str(up).encode())
+                    sleep_ms(100)
+                    break
 
-                sleep = max_pause - delay
-                sleep_ms(sleep)
-                break
+                sleep_ms(1)
+    
+    all_delays['button'] = delays
+    filtered_delays = filter_outliers(delays)
+    all_stats['button'] = {
+        'min': min(filtered_delays),
+        'max': max(filtered_delays),
+        'avg': round(np.mean(filtered_delays), 2),
+        'jitter': round(np.std(filtered_delays), 2)
+    }
 
-            # Abort if no response within 400 ms
-            if elapsed_time > 400:
-                ser.write(str(up).encode())
-                sleep_ms(100)
-                break
+else:  # Stick test
+    for threshold in thresholds:
+        delays = []
+        counter = 0
+        invalid_test = False
+        positive_x_detected = False
+        negative_x_detected = False
 
-            sleep_ms(1)
+        print(f"\nTesting with threshold: {threshold}")
+        
+        with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dynamic_ncols=False, postfix=[0]) as pbar:
+            while counter < repeat:
+                ser.write(str(down).encode())
+                
+                start = time.perf_counter()
+                while True:
+                    current_time = time.perf_counter()
+                    elapsed_time = (current_time - start) * 1000
+                    button_state = read_gamepad_axis(joystick, threshold)
+                    
+                    if button_state:
+                        end = current_time
+                        delay = round((end - start) * 1000, 2)
+                        ser.write(str(up).encode())
 
-# Perform statistical analysis on recorded delays
-str_of_numbers = ', '.join(map(str, delays))
-delay_list = filter_outliers(delays)
+                        stick_position_x = joystick.get_axis(stick_axes_indices[0])
+                        stick_position_y = joystick.get_axis(stick_axes_indices[1])
+                        stick_position_x_rounded = round(stick_position_x, 2)
+                        stick_position_y_rounded = round(stick_position_y, 2)
 
-filteredMin = min(delay_list)
-filteredMax = max(delay_list)
-filteredAverage = np.mean(delay_list)
-filteredAverage_rounded = round(filteredAverage, 2)
+                        if stick_position_x_rounded >= threshold:
+                            positive_x_detected = True
+                        elif stick_position_x_rounded <= -threshold:
+                            negative_x_detected = True
 
-polling_rate = round(1000 / filteredAverage, 2)
-jitter = np.std(delay_list)
-jitter = round(jitter, 2)
+                        if positive_x_detected and negative_x_detected:
+                            invalid_test = True
+                            pbar.bar_format = '{l_bar}{bar} ' + Fore.RED + '| {postfix[0]}' + Fore.RESET
 
-# Retrieve OS information
-os_name = platform.system()
-uname = platform.uname()
-os_version = uname.version
+                        if 0.28 <= delay < 150:
+                            delays.append(delay)
+                            pbar.postfix[0] = "{:05.2f} ms | X: {:05.2f}, Y: {:05.2f}".format(delay, stick_position_x_rounded, stick_position_y_rounded)
+                            pbar.update(1)
+                            counter += 1
+
+                        max_pause = min(round(delay + 33), 100)
+                        sleep_ms(max_pause - delay)
+                        break
+
+                    if elapsed_time > 400:
+                        ser.write(str(up).encode())
+                        sleep_ms(100)
+                        break
+
+                    sleep_ms(1)
+
+        all_delays[threshold] = delays
+        filtered_delays = filter_outliers(delays)
+        all_stats[threshold] = {
+            'min': min(filtered_delays),
+            'max': max(filtered_delays),
+            'avg': round(np.mean(filtered_delays), 2),
+            'jitter': round(np.std(filtered_delays), 2)
+        }
 
 # Display test results
-print(f" ")
-print(f"\033[1mTest results:\033[0m")
+print(f"\n\033[1mTest results:\033[0m")
 print(f"------------------------------------------")
-print(f"OS:                 {os_name} {os_version}")
+print(f"OS:                 {platform.system()} {platform.uname().version}")
 print(f"Gamepad mode:       {joystick.get_name()}")
 print(f"Test type:          {'Button' if test_type == '1' else 'Stick'}")
-if test_type == '2':
-    print(f"Stick threshold:    {stick_treshold}")
-print(f" ")
-print(f"Minimal latency:    {filteredMin} ms")
-print(f"Average latency:    {filteredAverage_rounded} ms")
-print(f"Maximum latency:    {filteredMax} ms")
-print(f" ")
-print(f"Jitter:             {jitter} ms")
 print(f"------------------------------------------")
-print(f" ")
 
-# Check if test is invalid due to both positive and negative X detections
-if invalid_test:
-    print(Fore.RED + "\nWarning: The test detected input on both positive and negative X axes, which indicates improper wiring. The test is not valid." + Fore.RESET)
-    print("\033[31mTest results cannot be submitted to the server.\033[0m")
-    # Prompt user to quit
-    input("Press Enter to exit...")
-    exit(1)
+if test_type == '1':
+    stats = all_stats['button']
+    print(f"Minimal latency:    {stats['min']} ms")
+    print(f"Average latency:    {stats['avg']} ms")
+    print(f"Maximum latency:    {stats['max']} ms")
+    print(f"Jitter:             {stats['jitter']} ms")
+else:
+    for threshold, stats in all_stats.items():
+        print(f"\nResults for threshold {threshold}:")
+        print(f"  Minimal latency:    {stats['min']} ms")
+        print(f"  Average latency:    {stats['avg']} ms")
+        print(f"  Maximum latency:    {stats['max']} ms")
+        print(f"  Jitter:             {stats['jitter']} ms")
 
-# Перехід на gamepadla.com (go to gamepadla.com)
-answer = input('Open test results on the website (Y/N): ').lower()
-if answer != 'y':
-    exit(1)
+print(f"------------------------------------------")
+
+if test_type == '2' and invalid_test:
+    print(Fore.RED + "\nWarning: The test detected input on both positive and negative X axes, which indicates improper wiring. The test may not be valid." + Fore.RESET)
 
 # Prepare data for upload to server
 test_key = uuid.uuid4()
 gamepad_name = input("Gamepad name: ")
 
 connection = input("Current connection (1. Cable, 2. Bluetooth, 3. Dongle): ")
-if connection == "1":
-    connection = "Cable"
-elif connection == "2":
-    connection = "Bluetooth"
-elif connection == "3":
-    connection = "Dongle"
-else:
-    print("Invalid choice. Defaulting to Unset.")
-    connection = "Unset"
+connection_options = {"1": "Cable", "2": "Bluetooth", "3": "Dongle"}
+connection = connection_options.get(connection, "Unset")
 
 data = {
     'test_key': str(test_key),
@@ -340,18 +334,11 @@ data = {
     'driver': joystick.get_name(),
     'connection': connection,
     'name': gamepad_name,
-    'os_name': os_name,
-    'sleep_time': sleep,
-    'os_version': os_version,
-    'min_latency': filteredMin,
-    'avg_latency': filteredAverage_rounded,
-    'max_latency': filteredMax,
-    'polling_rate': polling_rate,
-    'jitter': jitter,
-    'mathod': method,
-    'delay_list': str_of_numbers,
-    'stick_threshold': stick_treshold
-
+    'os_name': platform.system(),
+    'os_version': platform.uname().version,
+    'method': method,
+    'all_delays': json.dumps(all_delays),
+    'all_stats': json.dumps(all_stats)
 }
 
 # Send data to server and open results page
@@ -363,9 +350,9 @@ else:
     print("Failed to send test results to the server.")
 
 # Save test data locally
-with open('test_data.txt', 'w') as outfile:
+with open('test_data.json', 'w') as outfile:
     json.dump(data, outfile, indent=4)
 
 # Prompt user to quit
 input("Press Enter to exit...")
-exit(1)
+exit(0)
