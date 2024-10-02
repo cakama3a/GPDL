@@ -18,9 +18,10 @@ pygame.init()
 
 # Set constants
 ver = "3.1.1"  # Updated version
-repeat = 200  # Number of tests per threshold
+repeat = 400  # Number of tests per threshold
+repeat_btn = 2000
 max_pause = 33
-thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+thresholds = [0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95]
 
 # Print welcome messages
 print(f" ")
@@ -113,7 +114,7 @@ test_type = input("Enter test type (1/2): ")
 if test_type == '1':
     button_pin, down, up, method = 2, "L", "H", "ARD"  # Button test
 elif test_type == '2':
-    button_pin, down, up, method = 5, "L", "H", "STK"  # Stick test (WO Resistor mode)
+    button_pin, down, up, method = 5, "L", "H", "STK2"  # Stick test (WO Resistor mode)
     
     # Choose which stick to test (left or right)
     print("\n\033[1mChoose Stick to Test:\033[0m")
@@ -172,9 +173,11 @@ def sleep_ms(milliseconds):
     time.sleep(seconds)
 
 # Inform user and start the test
-print("\nThe test will begin in 2 seconds...")
+print("\nThe test will begin in 3 seconds...")
 print("\033[33mIf the bar does not progress, try swapping the contacts.\033[0m")
 time.sleep(2)
+ser.write(str(up).encode())
+time.sleep(1)
 
 # Initialize variables for storing results
 all_delays = {}
@@ -185,8 +188,8 @@ if test_type == '1':  # Button test
     delays = []
     counter = 0
     
-    with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dynamic_ncols=False, postfix=[0]) as pbar:
-        while counter < repeat:
+    with tqdm(total=repeat_btn, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dynamic_ncols=False, postfix=[0]) as pbar:
+        while counter < repeat_btn:
             ser.write(str(down).encode())
             
             start = time.perf_counter()
@@ -327,7 +330,7 @@ connection_options = {"1": "Cable", "2": "Bluetooth", "3": "Dongle"}
 connection = connection_options.get(connection, "Unset")
 
 data = {
-    'test_key': str(test_key),
+    'test_key2': str(test_key),
     'version': ver,
     'url': 'https://gamepadla.com',
     'date': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
@@ -345,7 +348,7 @@ data = {
 response = requests.post('https://gamepadla.com/scripts/poster.php', data=data)
 if response.status_code == 200:
     print("Test results successfully sent to the server.")
-    webbrowser.open(f'https://gamepadla.com/result/{test_key}/')
+    webbrowser.open(f'https://gamepadla.com/scripts/poster.php?redirect={test_key}')
 else:
     print("Failed to send test results to the server.")
 
