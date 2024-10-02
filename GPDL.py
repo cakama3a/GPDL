@@ -117,10 +117,10 @@ elif test_type == '2':
     # Prompt user to input stick threshold
     print()
     try:
-        stick_treshold = float(input("Enter stick threshold value (default is 0.99): "))
+        stick_treshold = float(input("Enter stick threshold value (default is 0.95): "))
     except ValueError:
-        print("Invalid input. Using default threshold of 0.99.")
-        stick_treshold = 0.99
+        print("Invalid input. Using default threshold of 0.95.")
+        stick_treshold = 0.95
 else:
     print("\033[31mInvalid test type. Exiting.\033[0m")
     ser.close()
