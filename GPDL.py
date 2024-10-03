@@ -1,22 +1,21 @@
-ver = "3.0.9"  # Updated version
-repeat = 2000
-max_pause = 33
-stick_treshold = 0.99  # Threshold for detecting valid axis values
-
-# Import necessary libraries
-from colorama import Fore, Back, Style
+import time
 import serial
 from serial.tools import list_ports
+from colorama import Fore, Back, Style
 import json
 import requests
 import webbrowser
 import platform
 import numpy as np
-import time
 import uuid
 from tqdm import tqdm
 import pygame
 from pygame.locals import *
+
+ver = "3.0.92"  # Updated version
+repeat = 2000
+max_pause = 33
+stick_treshold = 0.99  # Threshold for detecting valid axis values
 
 # Initialize pygame
 pygame.init()
@@ -40,6 +39,23 @@ print(f"Support Me: https://ko-fi.com/gamepadla")
 print(f"Guide to using GPDL: https://gamepadla.com/gpdl-tester-guide.pdl")
 print("\033[33mDon't forget to update the firmware of GPDL device! https://gamepadla.com/updating-gpdl-firmware.pdl\033[0m")
 print(f"---")
+
+def connect_to_com_port(port, baud_rate=115200, max_attempts=5):
+    attempts = 0
+    while attempts < max_attempts:
+        try:
+            ser = serial.Serial(port, baud_rate)
+            print(f"\033[32mSuccessfully connected to {port}\033[0m")
+            return ser
+        except serial.SerialException as e:
+            attempts += 1
+            print(f"\033[31mAttempt {attempts}/{max_attempts}: Error opening {port}: {e}\033[0m")
+            if attempts < max_attempts:
+                print(f"Retrying in 5 seconds...")
+                time.sleep(5)
+            else:
+                print(f"\033[31mFailed to connect after {max_attempts} attempts. Exiting.\033[0m")
+                exit(1)
 
 # Get a list of connected joysticks
 joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
@@ -71,13 +87,12 @@ else:
         time.sleep(5)
         exit()
 
-# Connect to the specified COM port
+# Connect to the specified COM port with retry logic
 try:
-    ser = serial.Serial(port, 115200)
-except serial.SerialException as e:
-    print(f"\033[31mError opening {port}: {e}\033[0m")
-    time.sleep(5)
-    exit()
+    ser = connect_to_com_port(port)
+except Exception as e:
+    print(f"\033[31mUnexpected error: {e}\033[0m")
+    exit(1)
 
 # List available gamepads
 print(" ")
@@ -351,7 +366,6 @@ data = {
     'mathod': method,
     'delay_list': str_of_numbers,
     'stick_threshold': stick_treshold
-
 }
 
 # Send data to server and open results page
@@ -366,6 +380,9 @@ else:
 with open('test_data.txt', 'w') as outfile:
     json.dump(data, outfile, indent=4)
 
+# Close the serial connection
+ser.close()
+
 # Prompt user to quit
 input("Press Enter to exit...")
-exit(1)
+exit(0)
