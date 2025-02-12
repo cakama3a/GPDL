@@ -10,3 +10,6 @@ GPDLs.py
 private.key
 /dist/GPDL/_internal
 test_data.txt
+cert.pem
+dist/GPDL_signed.exe
+key.pem
