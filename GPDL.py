@@ -12,7 +12,7 @@ from tqdm import tqdm
 import pygame
 from pygame.locals import *
 
-ver = "3.0.92"  # Updated version
+ver = "3.0.9.3"  # Updated version
 repeat = 2000
 max_pause = 33
 stick_treshold = 0.99  # Threshold for detecting valid axis values
@@ -252,8 +252,12 @@ with tqdm(total=repeat, ncols=76, bar_format='{l_bar}{bar} | {postfix[0]}', dyna
                         invalid_test = True
                         pbar.bar_format = '{l_bar}{bar} ' + Fore.RED + '| {postfix[0]}' + Fore.RESET  # Change progress bar color to red
 
+                # Low latency fix
+                if delay < 0.02:
+                    delay = 0.5
+
                 # Record delays within valid range
-                if delay >= 0.28 and delay < 150:
+                if delay < 150:
                     delays.append(delay)
                     
                     # Update progress bar for button or stick test
