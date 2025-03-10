@@ -11,8 +11,10 @@ import uuid
 from tqdm import tqdm
 import pygame
 from pygame.locals import *
+import random
+import string
 
-ver = "3.0.9.3"  # Updated version
+ver = "3.0.9.4"  # Updated version
 repeat = 2000
 max_pause = 33
 stick_treshold = 0.99  # Threshold for detecting valid axis values
@@ -56,6 +58,11 @@ def connect_to_com_port(port, baud_rate=115200, max_attempts=5):
             else:
                 print(f"\033[31mFailed to connect after {max_attempts} attempts. Exiting.\033[0m")
                 exit(1)
+
+# Short ID Generation
+def generate_short_id(length=12):
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choice(characters) for _ in range(length))
 
 # Get a list of connected joysticks
 joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
@@ -308,6 +315,9 @@ os_version = uname.version
 # Display test results
 print(f" ")
 print(f"\033[1mTest results:\033[0m")
+if test_type in ['2', '3']:  # Only for stick tests
+    print("\033[33mWARNING: Tests of stick latency using this method may be inaccurate because GPDL provides programmatic rather than analog stick movement.\033[0m")
+    print(f" ")
 print(f"------------------------------------------")
 print(f"OS:                 {os_name} {os_version}")
 print(f"Gamepad mode:       {joystick.get_name()}")
@@ -337,7 +347,7 @@ if answer != 'y':
     exit(1)
 
 # Prepare data for upload to server
-test_key = uuid.uuid4()
+test_key = generate_short_id()
 gamepad_name = input("Gamepad name: ")
 
 connection = input("Current connection (1. Cable, 2. Bluetooth, 3. Dongle): ")
