@@ -15,7 +15,8 @@ GPDL Tester is a tool for measuring latency of gamepad buttons and joysticks. It
 
 By choosing the pre-made option, you're contributing to the ongoing development and improvement of the GPDL Tester project.
 
-![image](https://github.com/user-attachments/assets/2f5dc737-cd30-4101-bacd-b26d53251c3e)
+![351636863-2f5dc737-cd30-4101-bacd-b26d53251c3e](https://github.com/user-attachments/assets/1d7a61b5-b914-4855-a8c6-e9555b279632)
+
 
 **Preparing for testing**  
 1. Disassemble the gamepad to access the pins of its stіck or buttons.
