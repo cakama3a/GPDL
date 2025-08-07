@@ -73,6 +73,6 @@ What it will look like in real life
 2. The joystick testing mode is still experimental and may require additional resistors on the contacts depending on the stick voltage
 3. Important note about stick testing: Although the GPDL tester has an option for testing gamepad sticks, the test results typically differ significantly from real-world performance. This is because the tester creates an instantaneous contact closure on the potentiometer and does not account for the gamepad's internal movement processing algorithms. Therefore, these tests have nothing in common with real-world latency and are purely synthetic. For verification purposes, only button tests are accepted, not stick tests.
 
-**LINKS:**  
-Donate: https://ko-fi.com/gamepadla  
-A website with a catalog of tested gamepads: https://gamepadla.com  
+## Donation
+- Gamepadla is not a commercial project, and its development is based solely on the author's enthusiasm. If you want to support me, please do so at https://ko-fi.com/gamepadla
+- Or you can donate in cryptocurrency at [https://plisio.net/donate/1pkNYhBv](https://plisio.net/donate/1pkNYhBv)
