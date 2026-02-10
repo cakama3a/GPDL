@@ -14,7 +14,7 @@ from pygame.locals import *
 import random
 import string
 
-ver = "3.0.9.4"  # Updated version
+ver = "3.0.9.5"  # Updated version
 repeat = 2000
 max_pause = 33
 stick_treshold = 0.99  # Threshold for detecting valid axis values
@@ -76,6 +76,13 @@ if not joysticks:
 
 # List available COM ports
 available_ports = [port.device for port in list_ports.comports()]
+
+if not available_ports:
+    print(" ")
+    print("\033[31mNo COM ports found!\033[0m")
+    input("Press Enter to exit...")
+    exit(1)
+
 print(" ")
 print("Available COM ports:")
 for i, port in enumerate(available_ports):
@@ -124,7 +131,7 @@ else:
 # Prompt user to select test type (Button test or Stick test)
 print("\n\033[1mChoose Test Type:\033[0m")
 print("1 - BUTTON latency test")
-print("2 - STICK W/O Resistor")
+print("2 - STICK latency test (Outdated)")
 print("\033[38;5;208m⚠  WARNING: DO NOT MIX UP THE MODES! Incorrect selection may damage your gamepad. ⚠\033[0m")
 print("Wait 3 seconds...")
 time.sleep(3)
@@ -340,6 +347,15 @@ if invalid_test:
     # Prompt user to quit
     input("Press Enter to exit...")
     exit(1)
+
+# Block submission for STICK W/O Resistor test
+if test_type == '2':
+    print(f" ")
+    print("\033[33mWARNING: This test is deprecated and inaccurate due to different stick technologies.\033[0m")
+    print("\033[33mFor accurate stick testing, please use the Prometheus 82 tester.\033[0m")
+    print("\033[31mThese results cannot be submitted to Gamepadla.\033[0m")
+    input("Press Enter to exit...")
+    exit(0)
 
 # Перехід на gamepadla.com (go to gamepadla.com)
 answer = input('Open test results on the website (Y/N): ').lower()
