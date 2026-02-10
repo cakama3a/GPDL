@@ -6,7 +6,7 @@ setlocal EnableDelayedExpansion
 :: =====================================================================
 set "USE_NOCONSOLE=false"                    :: Змініть на true щоб приховати консоль
 set "SIGN_WITH_YUBIKEY=true"                 :: Встановіть true для підпису EXE з YubiKey
-set "REQUIRED_PACKAGES=pygame numpy requests colorama pillow" :: Необхідні Python пакети
+set "REQUIRED_PACKAGES=pygame numpy requests colorama tqdm pyserial" :: Необхідні Python пакети
 :: =====================================================================
 
 :: Встановлюємо UTF-8 кодування
@@ -31,10 +31,9 @@ for /d %%D in ("%TEMP%\%OUTPUT_NAME%Build_*") do rd /s /q "%%D" 2>nul
 echo Using OUTPUT_NAME: %OUTPUT_NAME%
 echo Using OUTPUT_NAME: %OUTPUT_NAME% >> "%LOG_FILE%"
 
-set "PYTHON_SCRIPT=%SCRIPT_DIR%\Python.py"
-set "ICON_PNG_PATH=%SCRIPT_DIR%\icon.png"
+set "PYTHON_SCRIPT=%SCRIPT_DIR%\GPDL.py"
 set "TEMP_DIR=%TEMP%\%OUTPUT_NAME%Build_%RANDOM%"
-set "ICON_ICO_PATH=%TEMP_DIR%\icon.ico"
+set "ICON_ICO_PATH=%SCRIPT_DIR%\icon.ico"
 set "EXE_PATH=%TEMP_DIR%\dist\%OUTPUT_NAME%.exe"
 set "FINAL_EXE_PATH=%SCRIPT_DIR%\%OUTPUT_NAME%.exe"
 
@@ -91,20 +90,9 @@ if %ERRORLEVEL% neq 0 (
 :: Створення тимчасової директорії для ресурсів
 mkdir "%TEMP_DIR%" 2>nul
 
-:: Конвертація PNG в ICO
-if exist "%ICON_PNG_PATH%" (
-    echo Converting icon.png to icon.ico...
-    echo Converting icon.png to icon.ico... >> "%LOG_FILE%"
-    python -c "from PIL import Image; img = Image.open(r'%ICON_PNG_PATH%'); img.save(r'%ICON_ICO_PATH%', 'ICO')" >> "%LOG_FILE%" 2>&1
-    if %ERRORLEVEL% neq 0 (
-        echo Warning: Failed to convert icon.png to icon.ico (continuing without icon)
-        echo Warning: Failed to convert icon.png to icon.ico >> "%LOG_FILE%"
-    )
-)
-
 :: Збір файлів ресурсів для включення в EXE
 set "DATA_FILES="
-for %%E in (png jpg gif wav mp3 csv json xml txt) do (
+for %%E in (png jpg) do (
     for %%F in ("%SCRIPT_DIR%\*.%%E") do (
         echo Including resource: %%~nxF
         echo Including resource: %%~nxF >> "%LOG_FILE%"
@@ -134,6 +122,7 @@ if defined DATA_FILES (
 for %%P in (%REQUIRED_PACKAGES%) do (
     set "MODULE_NAME=%%P"
     if /I "%%P"=="pillow" set "MODULE_NAME=PIL"
+    if /I "%%P"=="pyserial" set "MODULE_NAME=serial"
     set "NUITKA_CMD=!NUITKA_CMD! --include-module=!MODULE_NAME!"
 )
 
@@ -172,7 +161,7 @@ if "%SIGN_WITH_YUBIKEY%"=="true" (
     echo.
     echo Signing EXE with YubiKey... >> "%LOG_FILE%"
 
-    powershell -ExecutionPolicy Bypass -Command "$cert = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert | Where-Object { $_.Subject -like '*Ivan Panchenko*' }; if ($cert) { Set-AuthenticodeSignature -FilePath '%EXE_PATH%' -Certificate $cert -TimestampServer 'http://timestamp.digicert.com' } else { Write-Host 'Code signing certificate for Ivan Panchenko not found.'; exit 1 }" >> "%LOG_FILE%" 2>&1
+    powershell -ExecutionPolicy Bypass -Command "$cert = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1; if ($cert) { Write-Host 'Found certificate:' $cert.Subject; Set-AuthenticodeSignature -FilePath '%EXE_PATH%' -Certificate $cert -TimestampServer 'http://timestamp.digicert.com' } else { Write-Host 'No code signing certificate found.'; exit 1 }" >> "%LOG_FILE%" 2>&1
 
     if %ERRORLEVEL% neq 0 (
         echo Warning: Failed to sign EXE file!
@@ -187,7 +176,7 @@ if "%SIGN_WITH_YUBIKEY%"=="true" (
         echo EXE file signed successfully.
         echo EXE file signed successfully. >> "%LOG_FILE%"
 
-        :: Перевірка підпису
+        REM Перевірка підпису
         echo Verifying signature...
         echo Verifying signature... >> "%LOG_FILE%"
         powershell -ExecutionPolicy Bypass -Command "if ((Get-AuthenticodeSignature -FilePath '%EXE_PATH%').Status -eq 'Valid') { Write-Host 'Signature verification: OK' } else { Write-Host 'Signature verification: FAILED'; exit 1 }" >> "%LOG_FILE%" 2>&1

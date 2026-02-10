@@ -13,3 +13,5 @@ test_data.txt
 cert.pem
 dist/GPDL_signed.exe
 key.pem
+build_log.txt
+GPDL.exe
